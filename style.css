@@ -1,56 +1,157 @@
+/* Base reset */
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
 body {
-  font-family: "Segoe UI", Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background: #f7f8fa;
-  color: #1e1e1e;
-  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  background: #000;  /* avoids white gutters while image loads */
+  color: #0f1111;
 }
 
-.container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 40px 20px;
+/* Stage = full-bleed background image */
+.stage {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
-
-.headline {
-  color: #0071ce; /* Walmart blue */
-  font-size: 2rem;
-  margin-bottom: 10px;
-}
-
-.subtext {
-  color: #444;
-  font-size: 1rem;
-  margin-bottom: 25px;
-}
-
-.mock-image img {
+.mock {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  max-width: 850px;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-  margin-bottom: 25px;
+  height: 100%;
+  object-fit: cover;       /* fills screen */
+  object-position: center top;
+  display: block;
 }
 
-.cta {
-  display: inline-block;
-  background: #ffc220; /* Walmart yellow */
-  color: #1e1e1e;
-  text-decoration: none;
+/* Colors tuned to feel Walmart-native but neutral */
+:root {
+  --wm-blue: #0071ce;
+  --wm-blue-hover: #005ea3;
+  --panel-bg: rgba(255,255,255,0.96);
+  --panel-border: rgba(15,17,17,0.12);
+  --shadow: 0 12px 36px rgba(0,0,0,0.22);
+  --ink: #0f1111;
+  --ink-subtle: #2f3133;
+}
+
+/* Opener (quiet, inline, no branding, no bubble) */
+.assistant-opener {
+  position: absolute;
+  top: 12%;
+  left: 6%;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: rgba(255,255,255,0.92);
+  color: var(--ink);
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.16);
+  cursor: pointer;
+  min-width: 240px;
+  text-align: left;
+}
+.assistant-opener .eyebrow {
+  font-size: 12px;
+  letter-spacing: .03em;
+  color: var(--ink-subtle);
+}
+.assistant-opener .headline {
+  font-size: 16px;
   font-weight: 600;
-  padding: 14px 24px;
-  border-radius: 8px;
-  transition: background 0.3s, transform 0.2s;
+  line-height: 1.25;
+}
+.assistant-opener .cta-chip {
+  align-self: start;
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 12px;
+  border-radius: 999px;
+  background: var(--wm-blue);
+  color: #fff;
+  transition: background 160ms ease, transform 160ms ease;
+}
+.assistant-opener:hover .cta-chip {
+  background: var(--wm-blue-hover);
+  transform: translateY(-1px);
 }
 
-.cta:hover {
-  background: #ffb400;
-  transform: scale(1.03);
+/* Inset assistant panel (NOT a bubble). Indented on all sides. */
+.assistant-panel {
+  position: absolute;
+  /* Indents so shoppers still 'see Walmart' all around */
+  top: 8%;
+  right: 6%;
+  bottom: 8%;
+  left: 40%;         /* right-side panel; adjust to taste */
+  display: flex;
+  flex-direction: column;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  backdrop-filter: saturate(1.1) blur(0px);
 }
 
-footer {
-  margin-top: 35px;
-  font-size: 0.9rem;
-  color: #777;
+/* Small screens: make panel larger but keep margins */
+@media (max-width: 1024px) {
+  .assistant-panel {
+    left: 8%;
+  }
+}
+@media (max-width: 720px) {
+  .assistant-panel {
+    left: 4%;
+    right: 4%;
+    top: 10%;
+    bottom: 10%;
+  }
+}
+
+/* Panel header */
+.panel-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--panel-border);
+  background: rgba(255,255,255,0.9);
+}
+.panel-title { font-weight: 600; font-size: 14px; color: var(--ink-subtle); }
+.panel-actions {
+  display: inline-flex; gap: 10px; align-items: center;
+}
+.open-tab {
+  font-size: 13px;
+  text-decoration: none;
+  color: var(--wm-blue);
+}
+.open-tab:hover { text-decoration: underline; }
+.panel-close {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 8px;
+  background: #f3f4f6; border: 1px solid var(--panel-border);
+  cursor: pointer; color: #333; font-size: 18px; line-height: 1;
+}
+.panel-close:hover { background: #e9eaec; }
+
+/* Iframe fills the rest of the panel */
+.assistant-frame {
+  border: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Accessibility helper */
+.sr-only {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,1px,1px);
+  white-space: nowrap; border: 0;
 }
