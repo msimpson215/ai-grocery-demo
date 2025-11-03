@@ -28,11 +28,15 @@ body {
 :root {
   --wm-blue: #0071ce;
   --wm-blue-hover: #005ea3;
-  --panel-bg: rgba(255,255,255,0.94);
-  --panel-border: rgba(15,17,17,0.12);
-  --shadow: 0 6px 22px rgba(0,0,0,0.16);
   --ink: #0f1111;
   --ink-subtle: #2f3133;
+  --chip-bg: rgba(255,255,255,0.94);
+  --chip-border: rgba(15,17,17,0.12);
+  --shadow: 0 6px 18px rgba(0,0,0,0.12);
+
+  /* Position knobs for the opener (tweak if the PNG comp differs) */
+  --opener-top: 12.5%;
+  --opener-left: 6%;
 }
 
 /* Utility strip */
@@ -49,7 +53,7 @@ body {
   border-radius: 999px;
   background: rgba(255,255,255,0.92);
   border: 1px solid rgba(15,17,17,0.10);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  box-shadow: var(--shadow);
   font-size: 13px;
   color: #2f3133;
 }
@@ -60,103 +64,81 @@ body {
 }
 .utility-strip .dot { opacity: .5; }
 
-.linklike {
-  color: var(--wm-blue);
-  text-decoration: none;
-  cursor: pointer;
-}
-.linklike:hover { text-decoration: underline; }
-
-/* Opener: smaller & more native */
+/* Slim, native-looking opener (pill, blue text, no card look) */
 .assistant-opener {
   position: absolute;
-  top: 13%;
-  left: 6%;
+  top: var(--opener-top);
+  left: var(--opener-left);
+
   display: inline-flex;
-  flex-direction: column;
-  gap: 5px;
-  text-align: left;
-  background: var(--panel-bg);
+  align-items: center;
+  gap: 10px;
+
+  background: var(--chip-bg);
   color: var(--ink);
-  border-radius: 12px;
-  padding: 9px 11px;
-  border: 1px solid var(--panel-border);
+  border: 1px solid var(--chip-border);
+  border-radius: 999px;
+  padding: 8px 12px;
   box-shadow: var(--shadow);
   cursor: pointer;
-  min-width: 195px;
-  transform: translateZ(0) scale(0.92);
+
+  /* smaller feel so Walmart UI stays dominant */
+  transform: translateZ(0) scale(0.96);
   transition: box-shadow 150ms ease, transform 150ms ease, border-color 150ms ease;
 }
 .assistant-opener:hover {
-  box-shadow: 0 10px 26px rgba(0,0,0,0.20);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.18);
   border-color: rgba(0,0,0,0.14);
-  transform: translateZ(0) scale(0.94);
+  transform: translateZ(0) scale(0.98);
 }
-.assistant-opener .eyebrow {
-  font-size: 11px;
-  letter-spacing: .02em;
-  color: var(--ink-subtle);
-  opacity: .85;
-  line-height: 1;
-}
+
+/* Left: blue label */
 .assistant-opener .headline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-size: 14px;
   font-weight: 600;
-  line-height: 1.25;
-  color: var(--ink);
-}
-.assistant-opener .cta-chip {
-  align-self: start;
-  display: inline-block;
-  font-size: 11.5px;
-  font-weight: 600;
+  color: var(--wm-blue);
   line-height: 1;
-  padding: 6px 9px;
-  border-radius: 999px;
-  background: var(--wm-blue);
+}
+
+/* Walmart spark (subtle) */
+.assistant-opener .spark {
+  display: inline-block;
+  font-size: 13px;
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+/* Right: Start link, styled like inline control */
+.assistant-opener .cta-inline {
+  font-size: 13px;
+  font-weight: 600;
   color: #fff;
+  background: var(--wm-blue);
   border: 1px solid rgba(0,0,0,0.04);
+  border-radius: 999px;
+  padding: 6px 10px;
+  line-height: 1;
   transition: background 140ms ease, transform 140ms ease;
 }
-.assistant-opener:hover .cta-chip {
+.assistant-opener:hover .cta-inline {
   background: var(--wm-blue-hover);
   transform: translateY(-1px);
 }
 
-/* Tiny hint after opening */
-.opened-hint {
-  position: absolute;
-  left: 50%;
-  bottom: 3.5%;
-  transform: translateX(-50%);
-  background: rgba(255,255,255,0.94);
-  border: 1px solid var(--panel-border);
-  border-radius: 10px;
-  padding: 8px 12px;
-  font-size: 12.5px;
-  color: var(--ink-subtle);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-}
-.opened-hint a {
-  color: var(--wm-blue);
-  text-decoration: none;
-  margin-left: 8px;
-}
-.opened-hint a:hover { text-decoration: underline; }
-
 /* Mobile tweaks */
 @media (max-width: 768px) {
-  .assistant-opener {
-    top: 10.5%;
-    left: 4%;
-    min-width: 56%;
-    transform: scale(0.90);
-  }
   .utility-strip {
-    top: .6%;
+    top: .7%;
     font-size: 12px;
     gap: 8px;
     padding: 6px 10px;
+  }
+  :root {
+    --opener-top: 10.5%;
+    --opener-left: 4%;
   }
 }
 
