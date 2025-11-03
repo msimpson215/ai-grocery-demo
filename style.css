@@ -1,13 +1,13 @@
-/* Base reset */
+/* Reset + base */
 * { box-sizing: border-box; }
 html, body { height: 100%; margin: 0; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-  background: #000;  /* avoids white gutters while image loads */
+  background: #000; /* prevents white gutters while image loads */
   color: #0f1111;
 }
 
-/* Stage = full-bleed background image */
+/* Full-bleed screenshot */
 .stage {
   position: relative;
   width: 100vw;
@@ -19,135 +19,128 @@ body {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;       /* fills screen */
+  object-fit: cover;      /* fills screen like a hero image */
   object-position: center top;
   display: block;
 }
 
-/* Colors tuned to feel Walmart-native but neutral */
+/* Utility strip (subtle, brand-first, visual copy only) */
+.utility-strip {
+  position: absolute;
+  top: 1.5%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.92);
+  border: 1px solid rgba(15,17,17,0.10);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  font-size: 13px;
+  color: #2f3133;
+}
+.utility-strip .brand {
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  color: #0071ce;   /* Walmart blue accent */
+}
+.utility-strip .dot { opacity: 0.5; }
+
+/* Color system tuned to feel Walmart-native but quiet */
 :root {
   --wm-blue: #0071ce;
   --wm-blue-hover: #005ea3;
-  --panel-bg: rgba(255,255,255,0.96);
+  --chip-bg: #0071ce;
+  --panel-bg: rgba(255,255,255,0.94);
   --panel-border: rgba(15,17,17,0.12);
-  --shadow: 0 12px 36px rgba(0,0,0,0.22);
   --ink: #0f1111;
   --ink-subtle: #2f3133;
 }
 
-/* Opener (quiet, inline, no branding, no bubble) */
+/* Opener: toned down, smaller, blends with fields */
 .assistant-opener {
   position: absolute;
+  /* Default placement: left-top quadrant near “Pickup or delivery”.
+     Adjust if your PNG composition differs. */
   top: 12%;
   left: 6%;
+
   display: inline-flex;
   flex-direction: column;
   gap: 6px;
-  border: 1px solid rgba(0,0,0,0.08);
-  background: rgba(255,255,255,0.92);
+  text-decoration: none;
+  background: var(--panel-bg);
   color: var(--ink);
   border-radius: 12px;
-  padding: 12px 14px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.16);
+  padding: 10px 12px;
+  border: 1px solid var(--panel-border);
+  box-shadow: 0 6px 22px rgba(0,0,0,0.16);
   cursor: pointer;
-  min-width: 240px;
+  min-width: 210px;
   text-align: left;
+
+  /* Smaller scale so Walmart stays dominant */
+  transform: translateZ(0) scale(0.96);
+  transition: box-shadow 150ms ease, transform 150ms ease, border-color 150ms ease;
 }
+
+.assistant-opener:hover {
+  box-shadow: 0 10px 28px rgba(0,0,0,0.20);
+  border-color: rgba(0,0,0,0.14);
+  transform: translateZ(0) scale(0.98);
+}
+
 .assistant-opener .eyebrow {
   font-size: 12px;
-  letter-spacing: .03em;
+  letter-spacing: .02em;
   color: var(--ink-subtle);
+  opacity: .85;
+  line-height: 1;
 }
 .assistant-opener .headline {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   line-height: 1.25;
+  color: var(--ink);
 }
 .assistant-opener .cta-chip {
   align-self: start;
   display: inline-block;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
-  padding: 9px 12px;
+  line-height: 1;
+  padding: 7px 10px;
   border-radius: 999px;
-  background: var(--wm-blue);
+  background: var(--chip-bg);
   color: #fff;
-  transition: background 160ms ease, transform 160ms ease;
+  border: 1px solid rgba(0,0,0,0.04);
+  transition: background 140ms ease, transform 140ms ease;
 }
 .assistant-opener:hover .cta-chip {
   background: var(--wm-blue-hover);
   transform: translateY(-1px);
 }
 
-/* Inset assistant panel (NOT a bubble). Indented on all sides. */
-.assistant-panel {
-  position: absolute;
-  /* Indents so shoppers still 'see Walmart' all around */
-  top: 8%;
-  right: 6%;
-  bottom: 8%;
-  left: 40%;         /* right-side panel; adjust to taste */
-  display: flex;
-  flex-direction: column;
-  background: var(--panel-bg);
-  border: 1px solid var(--panel-border);
-  border-radius: 16px;
-  box-shadow: var(--shadow);
-  overflow: hidden;
-  backdrop-filter: saturate(1.1) blur(0px);
-}
-
-/* Small screens: make panel larger but keep margins */
-@media (max-width: 1024px) {
-  .assistant-panel {
-    left: 8%;
-  }
-}
-@media (max-width: 720px) {
-  .assistant-panel {
-    left: 4%;
-    right: 4%;
+/* Mobile tweaks: keep it quiet and non-intrusive */
+@media (max-width: 768px) {
+  .assistant-opener {
     top: 10%;
-    bottom: 10%;
+    left: 4%;
+    min-width: 58%;
+    transform: translateZ(0) scale(0.94);
+  }
+  .utility-strip {
+    top: 1%;
+    gap: 8px;
+    font-size: 12px;
+    padding: 6px 10px;
   }
 }
 
-/* Panel header */
-.panel-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--panel-border);
-  background: rgba(255,255,255,0.9);
-}
-.panel-title { font-weight: 600; font-size: 14px; color: var(--ink-subtle); }
-.panel-actions {
-  display: inline-flex; gap: 10px; align-items: center;
-}
-.open-tab {
-  font-size: 13px;
-  text-decoration: none;
-  color: var(--wm-blue);
-}
-.open-tab:hover { text-decoration: underline; }
-.panel-close {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 28px; height: 28px; border-radius: 8px;
-  background: #f3f4f6; border: 1px solid var(--panel-border);
-  cursor: pointer; color: #333; font-size: 18px; line-height: 1;
-}
-.panel-close:hover { background: #e9eaec; }
-
-/* Iframe fills the rest of the panel */
-.assistant-frame {
-  border: 0;
-  width: 100%;
-  height: 100%;
-}
-
-/* Accessibility helper */
+/* Screen-reader only helper */
 .sr-only {
   position: absolute !important;
   width: 1px; height: 1px;
