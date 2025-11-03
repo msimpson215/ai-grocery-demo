@@ -1,0 +1,56 @@
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f7f8fa;
+  color: #1e1e1e;
+  text-align: center;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.headline {
+  color: #0071ce; /* Walmart blue */
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.subtext {
+  color: #444;
+  font-size: 1rem;
+  margin-bottom: 25px;
+}
+
+.mock-image img {
+  width: 100%;
+  max-width: 850px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  margin-bottom: 25px;
+}
+
+.cta {
+  display: inline-block;
+  background: #ffc220; /* Walmart yellow */
+  color: #1e1e1e;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 14px 24px;
+  border-radius: 8px;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.cta:hover {
+  background: #ffb400;
+  transform: scale(1.03);
+}
+
+footer {
+  margin-top: 35px;
+  font-size: 0.9rem;
+  color: #777;
+}
