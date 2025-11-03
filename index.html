@@ -15,8 +15,6 @@
     <div class="utility-strip">
       <span class="brand">Walmart</span>
       <span class="dot">•</span>
-      <a class="linklike" id="uploadLink" href="#" target="_blank" rel="noopener">Upload your grocery list</a>
-      <span class="dot">•</span>
       <span>Click to talk</span>
       <span class="dot">•</span>
       <span>Pause voice</span>
@@ -26,47 +24,31 @@
       <span>Microphone</span>
     </div>
 
-    <!-- Smaller, native-looking opener near Pickup/Delivery -->
+    <!-- Slim, Walmart-like opener near Pickup/Delivery -->
     <button
       class="assistant-opener"
       id="openAssistant"
       aria-label="Open shopping assistant"
       title="Open shopping assistant"
     >
-      <span class="eyebrow">Online</span>
-      <span class="headline">Shopping assistant</span>
-      <span class="cta-chip">Start</span>
+      <span class="headline">
+        <span class="spark" aria-hidden="true">✳</span>
+        Shopping assistant
+      </span>
+      <span class="cta-inline">Start</span>
     </button>
-
-    <!-- Tiny hint that appears after opening -->
-    <div class="opened-hint" id="openedHint" hidden>
-      Opened in a new tab — close that tab to come back here.
-      <a href="https://walmart-business-example.onrender.com/" target="_blank" rel="noopener">Open again</a>
-    </div>
   </main>
 
   <p class="sr-only">
-    Demo only. Clicking Start or Upload opens the assistant in a new tab. This page remains visible.
+    Demo only. Clicking Start opens the assistant in a new tab. This page remains visible.
   </p>
 
   <script>
-    // Your live Render app:
+    // Live Render app (VoxDoc Walmart)
     const RENDER_URL = "https://walmart-business-example.onrender.com/";
 
-    const openBtn = document.getElementById('openAssistant');
-    const uploadLink = document.getElementById('uploadLink');
-    const openedHint = document.getElementById('openedHint');
-
-    function openAssistant() {
+    document.getElementById('openAssistant').addEventListener('click', () => {
       window.open(RENDER_URL, '_blank', 'noopener');
-      openedHint.hidden = false;
-    }
-
-    openBtn.addEventListener('click', openAssistant);
-
-    uploadLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      openAssistant();
     });
   </script>
 </body>
