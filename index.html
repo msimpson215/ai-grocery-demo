@@ -2,26 +2,76 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AI Grocery Assistant Demo</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <h1 class="headline">Your AI Grocery Assistant</h1>
-    <p class="subtext">Experience how VoxTalk can enhance online shopping — before it's integrated into a real retailer.</p>
+  <!-- Full-bleed background screenshot -->
+  <main class="stage">
+    <img class="mock" src="walmart_mock_.png" alt="Walmart grocery page mock" />
 
-    <div class="mock-image">
-      <img src="walmart_mock_.png" alt="Walmart grocery mock page" />
-    </div>
+    <!-- Quiet inline opener near the 'Pickup or delivery' region -->
+    <button class="assistant-opener" id="openAssistant" aria-haspopup="dialog" aria-controls="assistantPanel">
+      <span class="eyebrow">Online</span>
+      <span class="headline">Your AI grocery assistant</span>
+      <span class="cta-chip">Help me shop</span>
+    </button>
 
-    <a class="cta" href="https://walmart-business-example.onrender.com/" target="_blank" rel="noopener">
-      🛒 Have our AI Grocery Assistant help you shop
-    </a>
+    <!-- Inset assistant panel (NOT a bubble). Indented on all sides so Walmart stays visible. -->
+    <section class="assistant-panel" id="assistantPanel" role="dialog" aria-label="AI grocery assistant panel" aria-modal="false" hidden>
+      <header class="panel-bar">
+        <div class="panel-title">Assistant</div>
+        <nav class="panel-actions">
+          <a class="open-tab" href="https://walmart-business-example.onrender.com/" target="_blank" rel="noopener">Open in new tab</a>
+          <button class="panel-close" id="closeAssistant" aria-label="Close assistant">×</button>
+        </nav>
+      </header>
 
-    <footer>
-      <p>Demo site for <strong>VoxTalk</strong> — not affiliated with Walmart.</p>
-    </footer>
-  </div>
+      <!-- The brain: your Render app, embedded -->
+      <iframe
+        id="assistantFrame"
+        class="assistant-frame"
+        src="https://walmart-business-example.onrender.com/"
+        title="AI grocery assistant"
+        loading="lazy"
+      ></iframe>
+
+      <noscript>
+        <div class="noscript-note">JavaScript is required to use the assistant. You can still
+          <a href="https://walmart-business-example.onrender.com/" target="_blank" rel="noopener">open it in a new tab</a>.
+        </div>
+      </noscript>
+    </section>
+  </main>
+
+  <p class="sr-only" id="srHint">
+    Demo only. The assistant opens within an inset panel over the page mock. Press Escape to close.
+  </p>
+
+  <script>
+    const openBtn = document.getElementById('openAssistant');
+    const panel = document.getElementById('assistantPanel');
+    const closeBtn = document.getElementById('closeAssistant');
+
+    function openPanel() {
+      panel.hidden = false;
+      panel.focus();
+      // optional: track state in hash so reload restores panel
+      // location.hash = '#assistant';
+    }
+
+    function closePanel() {
+      panel.hidden = true;
+      openBtn.focus();
+      // if (location.hash === '#assistant') history.replaceState(null, '', ' ');
+    }
+
+    openBtn.addEventListener('click', openPanel);
+    closeBtn.addEventListener('click', closePanel);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !panel.hidden) closePanel();
+    });
+  </script>
 </body>
 </html>
