@@ -13,10 +13,10 @@ body {
 
 /* ── Tweak knobs (adjust these only) ───────────────────────────── */
 :root{
-  /* CTA card position & size (relative to screenshot) */
-  --cta-top: 12.2%;     /* nudge up/down to sit in the right “lane” */
-  --cta-left: 6.2%;     /* nudge left/right */
-  --cta-maxw: 560px;    /* width of the card on desktop */
+  /* CTA card position & size (relative to screenshot lanes) */
+  --cta-top: 12.2%;     /* up/down to sit where “Pickup or delivery” is */
+  --cta-left: 6.2%;     /* left/right to line up with Walmart grid */
+  --cta-maxw: 560px;    /* overall width of the card */
   --cta-pad-y: 12px;    /* vertical padding inside card */
   --cta-pad-x: 14px;    /* horizontal padding inside card */
 
@@ -37,7 +37,7 @@ body {
   --shadow-lg: 0 24px 60px rgba(0,0,0,0.28);
 }
 
-/* CTA card — pinned, solid, Walmart-like */
+/* CTA card — pinned, solid, Walmart-like (not floaty) */
 .cta-card{
   position: absolute;
   top: var(--cta-top); left: var(--cta-left);
@@ -49,9 +49,7 @@ body {
   border: 1px solid var(--card-brd);
   box-shadow: var(--shadow-sm);
 }
-.cta-text{
-  display:flex; flex-direction:column; gap: 4px; min-width: 0;
-}
+.cta-text{ display:flex; flex-direction:column; gap: 4px; min-width: 0; }
 .cta-title{
   font-weight: 600; font-size: 14px; color: var(--wm-blue);
   letter-spacing: .2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -109,9 +107,10 @@ body {
 .panel-close:hover{ background: #e9eaec; }
 
 /* Iframe fills panel */
-.assistant-frame{ border: 0; width: 100%; height: 100%; }
+.frame-mount{ position: relative; flex: 1 1 auto; }
+.assistant-frame{ position: absolute; inset: 0; border: 0; width: 100%; height: 100%; }
 
-/* Fallback note */
+/* Fallback note if iframe blocked */
 .fallback-note{
   position: absolute; bottom: 10px; left: 12px; right: 12px;
   font-size: 12.5px; color: var(--ink-subtle);
@@ -142,10 +141,4 @@ body {
   .cta-title{ font-size: 13.5px; }
   .cta-sub{ font-size: 12px; }
   .cta-btn{ font-size: 13px; padding: 8px 12px; }
-}
-
-/* Accessibility helper */
-.sr-only{
-  position: absolute !important; width:1px; height:1px; padding:0; margin:-1px;
-  overflow:hidden; clip:rect(0,0,1px,1px); white-space:nowrap; border:0;
 }
