@@ -3,150 +3,145 @@
 html, body { height: 100%; margin: 0; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-  background: #000; /* avoids white gutters while image loads */
+  background: #000;
   color: #0f1111;
 }
 
-/* Full-bleed screenshot */
-.stage {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-}
-.mock {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;       /* fills the screen like a hero */
-  object-position: center top;
-  display: block;
-}
+/* Full-bleed screenshot stays visible */
+.stage { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+.mock  { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
 
-/* Walmart-ish palette (quiet) */
-:root {
+/* ── Tweak knobs (change only these to line things up) ───────────── */
+:root{
+  /* Opener location over the screenshot */
+  --opener-top: 12.5%;   /* try 11%–15% */
+  --opener-left: 6%;     /* try 4%–10%  */
+
+  /* Panel size inside the page */
+  --panel-inset-top: 10%;   /* bigger % = smaller panel vertically */
+  --panel-inset-right: 16%;
+  --panel-inset-bottom: 10%;
+  --panel-inset-left: 16%;
+
+  /* Visuals */
   --wm-blue: #0071ce;
   --wm-blue-hover: #005ea3;
   --ink: #0f1111;
   --ink-subtle: #2f3133;
   --chip-bg: rgba(255,255,255,0.94);
   --chip-border: rgba(15,17,17,0.12);
-  --shadow: 0 6px 18px rgba(0,0,0,0.12);
-
-  /* Position knobs for the opener (tweak if the PNG comp differs) */
-  --opener-top: 12.5%;
-  --opener-left: 6%;
+  --shadow-sm: 0 6px 18px rgba(0,0,0,0.12);
+  --shadow-lg: 0 24px 60px rgba(0,0,0,0.28);
 }
 
-/* Utility strip */
+/* Top utility strip (non-interactive demo text) */
 .utility-strip {
-  position: absolute;
-  top: 1%;
-  left: 50%;
-  transform: translateX(-50%);
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.92);
-  border: 1px solid rgba(15,17,17,0.10);
-  box-shadow: var(--shadow);
-  font-size: 13px;
-  color: #2f3133;
+  position: absolute; top: 1%; left: 50%; transform: translateX(-50%);
+  display: inline-flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  padding: 6px 12px; border-radius: 999px;
+  background: rgba(255,255,255,0.92); border: 1px solid rgba(15,17,17,0.10);
+  box-shadow: var(--shadow-sm); font-size: 13px; color: #2f3133;
 }
-.utility-strip .brand {
-  font-weight: 700;
-  letter-spacing: .2px;
-  color: var(--wm-blue);
-}
-.utility-strip .dot { opacity: .5; }
+.utility-strip .brand { font-weight: 700; letter-spacing: .2px; color: var(--wm-blue); }
+.utility-strip .dot   { opacity: .5; }
 
-/* Slim, native-looking opener (pill, blue text, no card look) */
-.assistant-opener {
-  position: absolute;
-  top: var(--opener-top);
-  left: var(--opener-left);
-
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-
-  background: var(--chip-bg);
-  color: var(--ink);
-  border: 1px solid var(--chip-border);
-  border-radius: 999px;
-  padding: 8px 12px;
-  box-shadow: var(--shadow);
-  cursor: pointer;
-
-  /* smaller feel so Walmart UI stays dominant */
+/* Opener: slim, Walmart-like, no “bubble” */
+.assistant-opener{
+  position: absolute; top: var(--opener-top); left: var(--opener-left);
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--chip-bg); color: var(--ink);
+  border: 1px solid var(--chip-border); border-radius: 999px;
+  padding: 8px 12px; box-shadow: var(--shadow-sm); cursor: pointer;
   transform: translateZ(0) scale(0.96);
   transition: box-shadow 150ms ease, transform 150ms ease, border-color 150ms ease;
 }
-.assistant-opener:hover {
-  box-shadow: 0 10px 26px rgba(0,0,0,0.18);
-  border-color: rgba(0,0,0,0.14);
-  transform: translateZ(0) scale(0.98);
+.assistant-opener:hover{ box-shadow: 0 10px 26px rgba(0,0,0,0.18); border-color: rgba(0,0,0,0.14); transform: scale(0.98); }
+.assistant-opener .headline{ display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--wm-blue); }
+.assistant-opener .spark{ font-size: 13px; transform: translateY(-1px); opacity: .9; }
+.assistant-opener .cta-inline{
+  font-size: 13px; font-weight: 600; color: #fff; background: var(--wm-blue);
+  border: 1px solid rgba(0,0,0,0.04); border-radius: 999px;
+  padding: 6px 10px; line-height: 1; transition: background 140ms ease, transform 140ms ease;
+}
+.assistant-opener:hover .cta-inline{ background: var(--wm-blue-hover); transform: translateY(-1px); }
+
+/* Small opener “launch” flourish when clicked */
+.assistant-opener.launch {
+  animation: openerPop 220ms ease-out;
+}
+@keyframes openerPop {
+  0%   { transform: scale(0.96); }
+  50%  { transform: scale(1.02); }
+  100% { transform: scale(0.98); }
 }
 
-/* Left: blue label */
-.assistant-opener .headline {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--wm-blue);
-  line-height: 1;
+/* Backdrop keeps Walmart visible but clearly “modal” */
+.backdrop {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: saturate(1.1);
+  z-index: 5;
 }
 
-/* Walmart spark (subtle) */
-.assistant-opener .spark {
-  display: inline-block;
-  font-size: 13px;
-  transform: translateY(-1px);
-  opacity: 0.9;
+/* Centered panel (square-ish, Walmart-y) */
+.assistant-panel{
+  position: absolute;
+  inset: var(--panel-inset-top) var(--panel-inset-right) var(--panel-inset-bottom) var(--panel-inset-left);
+  display: flex; flex-direction: column; background: #fff;
+  border: 1px solid rgba(15,17,17,0.12); border-radius: 18px;
+  box-shadow: var(--shadow-lg); overflow: hidden; z-index: 6;
 }
 
-/* Right: Start link, styled like inline control */
-.assistant-opener .cta-inline {
-  font-size: 13px;
-  font-weight: 600;
-  color: #fff;
-  background: var(--wm-blue);
-  border: 1px solid rgba(0,0,0,0.04);
-  border-radius: 999px;
-  padding: 6px 10px;
-  line-height: 1;
-  transition: background 140ms ease, transform 140ms ease;
+.panel-bar{
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 10px 12px; border-bottom: 1px solid rgba(15,17,17,0.12);
+  background: rgba(255,255,255,0.96);
 }
-.assistant-opener:hover .cta-inline {
-  background: var(--wm-blue-hover);
-  transform: translateY(-1px);
+.panel-title{ font-weight: 600; font-size: 14px; color: var(--ink-subtle); display: inline-flex; gap: 8px; align-items: center; }
+.panel-title .spark{ color: var(--wm-blue); font-size: 13px; }
+.panel-actions{ display: inline-flex; gap: 10px; align-items: center; }
+.open-tab{ font-size: 13px; color: var(--wm-blue); text-decoration: none; }
+.open-tab:hover{ text-decoration: underline; }
+.panel-close{
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 8px;
+  background: #f3f4f6; border: 1px solid rgba(15,17,17,0.12);
+  cursor: pointer; color: #333; font-size: 18px; line-height: 1;
 }
+.panel-close:hover{ background: #e9eaec; }
 
-/* Mobile tweaks */
-@media (max-width: 768px) {
-  .utility-strip {
-    top: .7%;
-    font-size: 12px;
-    gap: 8px;
-    padding: 6px 10px;
-  }
-  :root {
+/* Iframe fills panel */
+.assistant-frame{ border: 0; width: 100%; height: 100%; }
+
+/* Fallback text if iframe is blocked */
+.fallback-note{
+  position: absolute; bottom: 10px; left: 12px; right: 12px;
+  font-size: 12.5px; color: var(--ink-subtle);
+  background: rgba(255,255,255,0.95);
+  border: 1px solid rgba(15,17,17,0.10); border-radius: 8px;
+  padding: 8px 10px;
+}
+.fallback-note a{ color: var(--wm-blue); text-decoration: none; }
+.fallback-note a:hover{ text-decoration: underline; }
+
+/* Animations */
+.panel-in{ animation: panelIn 200ms ease-out; }
+.fade-out{ animation: fadeOut 160ms ease-in forwards; }
+@keyframes panelIn{ from{ opacity:0; transform: translateY(8px) scale(.992); } to{ opacity:1; transform: translateY(0) scale(1); } }
+@keyframes fadeOut{ from{ opacity:1; transform: translateY(0) scale(1); } to{ opacity:0; transform: translateY(-8px) scale(.992); } }
+
+/* Responsive tweaks */
+@media (max-width: 960px){
+  :root{
     --opener-top: 10.5%;
     --opener-left: 4%;
+    --panel-inset-right: 6%;
+    --panel-inset-left: 6%;
   }
 }
 
-/* Screen-reader only */
-.sr-only {
-  position: absolute !important;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0,0,1px,1px);
-  white-space: nowrap; border: 0;
+/* Accessibility helper (screen-reader only) */
+.sr-only{
+  position: absolute !important; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0,0,1px,1px); white-space:nowrap; border:0;
 }
