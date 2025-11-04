@@ -3,60 +3,74 @@
 html, body { height: 100%; margin: 0; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-  background: #000;
+  background: #000; /* avoids white gutters while image loads */
   color: #0f1111;
 }
 
-/* Full-bleed screenshot stays visible */
+/* Full-bleed screenshot */
 .stage { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
 .mock  { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
 
-/* ── Tweak knobs (change only these to line things up) ───────────── */
+/* ── Tweak knobs (adjust these only) ───────────────────────────── */
 :root{
-  /* Opener location over the screenshot */
-  --opener-top: 12.8%;   /* try 11%–15% */
-  --opener-left: 6.5%;   /* try 4%–10%  */
+  /* CTA card position & size (relative to screenshot) */
+  --cta-top: 12.2%;     /* nudge up/down to sit in the right “lane” */
+  --cta-left: 6.2%;     /* nudge left/right */
+  --cta-maxw: 560px;    /* width of the card on desktop */
+  --cta-pad-y: 12px;    /* vertical padding inside card */
+  --cta-pad-x: 14px;    /* horizontal padding inside card */
 
-  /* Panel size inside the page (made smaller for phone) */
+  /* Assistant panel insets (bigger % = smaller panel) */
   --panel-inset-top: 14%;
   --panel-inset-right: 22%;
   --panel-inset-bottom: 14%;
   --panel-inset-left: 22%;
 
-  /* Visuals */
+  /* Walmart-ish palette */
   --wm-blue: #0071ce;
   --wm-blue-hover: #005ea3;
   --ink: #0f1111;
   --ink-subtle: #2f3133;
-  --chip-bg: rgba(255,255,255,0.94);
-  --chip-border: rgba(15,17,17,0.12);
+  --card-bg: rgba(255,255,255,0.96);
+  --card-brd: rgba(15,17,17,0.12);
   --shadow-sm: 0 6px 18px rgba(0,0,0,0.12);
   --shadow-lg: 0 24px 60px rgba(0,0,0,0.28);
 }
 
-/* Opener: slim, Walmart-like */
-.assistant-opener{
-  position: absolute; top: var(--opener-top); left: var(--opener-left);
-  display: inline-flex; align-items: center; gap: 10px;
-  background: var(--chip-bg); color: var(--ink);
-  border: 1px solid var(--chip-border); border-radius: 999px;
-  padding: 7px 11px; box-shadow: var(--shadow-sm); cursor: pointer;
-  transform: translateZ(0) scale(0.96);
-  transition: box-shadow 150ms ease, transform 150ms ease, border-color 150ms ease;
+/* CTA card — pinned, solid, Walmart-like */
+.cta-card{
+  position: absolute;
+  top: var(--cta-top); left: var(--cta-left);
+  display: flex; align-items: center; gap: 12px;
+  max-width: var(--cta-maxw);
+  padding: var(--cta-pad-y) var(--cta-pad-x);
+  border-radius: 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-brd);
+  box-shadow: var(--shadow-sm);
 }
-.assistant-opener:hover{ box-shadow: 0 10px 26px rgba(0,0,0,0.18); border-color: rgba(0,0,0,0.14); transform: scale(0.98); }
-.assistant-opener .headline{ display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: var(--wm-blue); }
-.assistant-opener .spark{ font-size: 13px; transform: translateY(-1px); opacity: .9; }
-.assistant-opener .cta-inline{
-  font-size: 12.5px; font-weight: 600; color: #fff; background: var(--wm-blue);
-  border: 1px solid rgba(0,0,0,0.04); border-radius: 999px;
-  padding: 5px 9px; line-height: 1; transition: background 140ms ease, transform 140ms ease;
+.cta-text{
+  display:flex; flex-direction:column; gap: 4px; min-width: 0;
 }
-.assistant-opener:hover .cta-inline{ background: var(--wm-blue-hover); transform: translateY(-1px); }
+.cta-title{
+  font-weight: 600; font-size: 14px; color: var(--wm-blue);
+  letter-spacing: .2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cta-sub{
+  font-size: 12.5px; color: #4a4d50;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
 
-/* Small opener “launch” flourish when clicked */
-.assistant-opener.launch { animation: openerPop 220ms ease-out; }
-@keyframes openerPop { 0%{transform:scale(0.96);} 50%{transform:scale(1.02);} 100%{transform:scale(0.98);} }
+/* Walmart button */
+.cta-btn{
+  margin-left: auto;
+  background: var(--wm-blue); color:#fff;
+  font-weight: 700; font-size: 13.5px; line-height: 1;
+  border: 1px solid rgba(0,0,0,0.03);
+  border-radius: 999px; padding: 9px 14px;
+  cursor: pointer;
+}
+.cta-btn:hover{ background: var(--wm-blue-hover); }
 
 /* Backdrop keeps Walmart visible but clearly “modal” */
 .backdrop {
@@ -66,7 +80,7 @@ body {
   z-index: 5;
 }
 
-/* Centered panel (a bit smaller than before) */
+/* Centered assistant panel */
 .assistant-panel{
   position: absolute;
   inset: var(--panel-inset-top) var(--panel-inset-right) var(--panel-inset-bottom) var(--panel-inset-left);
@@ -75,17 +89,14 @@ body {
   box-shadow: var(--shadow-lg); overflow: hidden; z-index: 6;
 }
 
-/* Panel header with Walmart tone */
+/* Panel header */
 .panel-bar{
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
   padding: 10px 12px; border-bottom: 1px solid rgba(15,17,17,0.12);
   background: rgba(255,255,255,0.97);
 }
-.panel-title{ display:flex; flex-direction:column; gap:3px; }
-.title-line{ font-weight: 600; font-size: 14px; color: var(--ink-subtle); display: inline-flex; gap: 8px; align-items: center; }
-.title-line .spark{ color: var(--wm-blue); font-size: 13px; }
-.subtitle{ font-size: 12.5px; color: #4a4d50; }
-
+.panel-title{ font-weight: 600; font-size: 14px; color: var(--ink-subtle); display: inline-flex; gap: 8px; align-items: center; }
+.panel-title .spark{ color: var(--wm-blue); font-size: 13px; }
 .panel-actions{ display: inline-flex; gap: 10px; align-items: center; }
 .open-tab{ font-size: 13px; color: var(--wm-blue); text-decoration: none; }
 .open-tab:hover{ text-decoration: underline; }
@@ -100,7 +111,7 @@ body {
 /* Iframe fills panel */
 .assistant-frame{ border: 0; width: 100%; height: 100%; }
 
-/* Fallback text if iframe is blocked */
+/* Fallback note */
 .fallback-note{
   position: absolute; bottom: 10px; left: 12px; right: 12px;
   font-size: 12.5px; color: var(--ink-subtle);
@@ -117,19 +128,23 @@ body {
 @keyframes panelIn{ from{ opacity:0; transform: translateY(8px) scale(.992); } to{ opacity:1; transform: translateY(0) scale(1); } }
 @keyframes fadeOut{ from{ opacity:1; transform: translateY(0) scale(1); } to{ opacity:0; transform: translateY(-8px) scale(.992); } }
 
-/* Responsive tweaks (phones) */
+/* Phone tweaks */
 @media (max-width: 960px){
   :root{
-    --opener-top: 10.8%;
-    --opener-left: 4.6%;
+    --cta-top: 10.6%;
+    --cta-left: 4.6%;
+    --cta-maxw: 88vw;
     --panel-inset-right: 8%;
     --panel-inset-left: 8%;
     --panel-inset-top: 15%;
     --panel-inset-bottom: 15%;
   }
+  .cta-title{ font-size: 13.5px; }
+  .cta-sub{ font-size: 12px; }
+  .cta-btn{ font-size: 13px; padding: 8px 12px; }
 }
 
-/* Accessibility helper (screen-reader only) */
+/* Accessibility helper */
 .sr-only{
   position: absolute !important; width:1px; height:1px; padding:0; margin:-1px;
   overflow:hidden; clip:rect(0,0,1px,1px); white-space:nowrap; border:0;
