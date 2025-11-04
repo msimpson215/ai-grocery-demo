@@ -11,19 +11,6 @@
     <!-- Full-screen Walmart screenshot -->
     <img class="mock" src="walmart_mock_.png" alt="Walmart grocery page mock" />
 
-    <!-- Quiet utility strip (brand-first, non-interactive) -->
-    <div class="utility-strip" aria-hidden="true">
-      <span class="brand">Walmart</span>
-      <span class="dot">•</span>
-      <span>Click to talk</span>
-      <span class="dot">•</span>
-      <span>Pause voice</span>
-      <span class="dot">•</span>
-      <span>Classic chat (quiet)</span>
-      <span class="dot">•</span>
-      <span>Microphone</span>
-    </div>
-
     <!-- Slim, Walmart-like opener near Pickup/Delivery -->
     <button
       class="assistant-opener"
@@ -43,9 +30,12 @@
 
     <section class="assistant-panel" id="assistantPanel" role="dialog" aria-modal="true" aria-labelledby="assistantTitle" hidden>
       <header class="panel-bar">
-        <div class="panel-title" id="assistantTitle">
-          <span class="spark" aria-hidden="true">✳</span>
-          Walmart — AI Grocery Assistant
+        <div class="panel-title">
+          <div class="title-line" id="assistantTitle">
+            <span class="spark" aria-hidden="true">✳</span>
+            Walmart — AI Grocery Assistant
+          </div>
+          <div class="subtitle">Upload your grocery list inside the assistant.</div>
         </div>
         <nav class="panel-actions">
           <a class="open-tab" href="https://walmart-business-example.onrender.com/" target="_blank" rel="noopener">Open in new tab</a>
@@ -82,7 +72,6 @@
     const fallback  = document.getElementById('fallbackNote');
 
     function openPanel() {
-      // “Launch” animation from the opener
       openBtn.classList.add('launch');
       setTimeout(() => openBtn.classList.remove('launch'), 220);
 
@@ -110,7 +99,6 @@
     backdrop.addEventListener('click', closePanel); // click outside to close
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panel.hidden) closePanel(); });
 
-    // If the iframe loads, keep the fallback note hidden (no flashing)
     iframe.addEventListener('load', () => { fallback.hidden = true; });
   </script>
 </body>
