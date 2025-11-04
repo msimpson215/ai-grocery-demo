@@ -11,18 +11,16 @@
     <!-- Full-screen Walmart screenshot -->
     <img class="mock" src="walmart_mock_.png" alt="Walmart grocery page mock" />
 
-    <!-- Walmart-like CTA card (fixed, not floaty) -->
+    <!-- Walmart-like CTA card (fixed in place, not floaty) -->
     <section class="cta-card" aria-labelledby="ctaTitle">
       <div class="cta-text">
         <span id="ctaTitle" class="cta-title">Let our AI Grocery Assistant assist you today</span>
-        <span class="cta-sub">Looks and feels like Walmart — opens right here.</span>
+        <span class="cta-sub">Opens right here — looks and feels like Walmart.</span>
       </div>
-      <button id="openAssistant" class="cta-btn" aria-label="Open AI Grocery Assistant">
-        Start
-      </button>
+      <button id="openAssistant" class="cta-btn" aria-label="Open AI Grocery Assistant">Start</button>
     </section>
 
-    <!-- Backdrop + centered panel -->
+    <!-- Backdrop + centered panel (both hidden until click) -->
     <div class="backdrop" id="backdrop" hidden></div>
 
     <section class="assistant-panel" id="assistantPanel" role="dialog" aria-modal="true" aria-labelledby="assistantTitle" hidden>
@@ -37,14 +35,8 @@
         </nav>
       </header>
 
-      <!-- LIVE assistant. If CSP blocks, use “Open in new tab”. -->
-      <iframe
-        id="assistantFrame"
-        class="assistant-frame"
-        src="https://walmart-business-example.onrender.com/"
-        title="Walmart AI Grocery Assistant"
-        loading="lazy"
-      ></iframe>
+      <!-- We attach the iframe ONLY after click (so nothing loads or flashes on page load) -->
+      <div class="frame-mount" id="frameMount"></div>
 
       <div class="fallback-note" id="fallbackNote" hidden>
         If you don’t see the assistant above, click
@@ -58,8 +50,10 @@
     const panel     = document.getElementById('assistantPanel');
     const backdrop  = document.getElementById('backdrop');
     const closeBtn  = document.getElementById('closeAssistant');
-    const iframe    = document.getElementById('assistantFrame');
+    const mount     = document.getElementById('frameMount');
     const fallback  = document.getElementById('fallbackNote');
+
+    let iframeAttached = false;
 
     function openPanel() {
       backdrop.hidden = false;
@@ -67,8 +61,19 @@
       panel.classList.remove('fade-out');
       panel.classList.add('panel-in');
 
-      // If iframe doesn't paint quickly (CSP), show fallback link
-      setTimeout(() => { fallback.hidden = false; }, 1000);
+      // Attach the iframe on first open (so nothing shows on load)
+      if (!iframeAttached) {
+        const iframe = document.createElement('iframe');
+        iframe.className = 'assistant-frame';
+        iframe.title = 'Walmart AI Grocery Assistant';
+        iframe.loading = 'lazy';
+        iframe.src = 'https://walmart-business-example.onrender.com/';
+        iframe.addEventListener('load', () => { fallback.hidden = true; });
+        mount.appendChild(iframe);
+        iframeAttached = true;
+        // Soft fallback if the frame is blocked by CSP
+        setTimeout(() => { fallback.hidden = false; }, 1000);
+      }
     }
 
     function closePanel() {
@@ -85,9 +90,6 @@
     backdrop.addEventListener('click', closePanel);
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panel.hidden) closePanel(); });
     if (closeBtn) closeBtn.addEventListener('click', closePanel);
-
-    // Hide fallback if iframe loads fine
-    iframe.addEventListener('load', () => { fallback.hidden = true; });
   </script>
 </body>
 </html>
