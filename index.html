@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Walmart — Shopping Assistant (Demo)</title>
+  <title>Walmart — AI Grocery Assistant (Demo)</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -11,8 +11,8 @@
     <!-- Full-screen Walmart screenshot -->
     <img class="mock" src="walmart_mock_.png" alt="Walmart grocery page mock" />
 
-    <!-- Quiet utility strip (brand-first) -->
-    <div class="utility-strip">
+    <!-- Quiet utility strip (brand-first, non-interactive) -->
+    <div class="utility-strip" aria-hidden="true">
       <span class="brand">Walmart</span>
       <span class="dot">•</span>
       <span>Click to talk</span>
@@ -28,28 +28,90 @@
     <button
       class="assistant-opener"
       id="openAssistant"
-      aria-label="Open shopping assistant"
-      title="Open shopping assistant"
+      aria-label="Open AI Grocery Assistant"
+      title="Open AI Grocery Assistant"
     >
       <span class="headline">
         <span class="spark" aria-hidden="true">✳</span>
-        Shopping assistant
+        AI Grocery Assistant
       </span>
-      <span class="cta-inline">Start</span>
+      <span class="cta-inline" aria-hidden="true">Start</span>
     </button>
+
+    <!-- Dimmed backdrop + centered panel so Walmart stays visible -->
+    <div class="backdrop" id="backdrop" hidden></div>
+
+    <section class="assistant-panel" id="assistantPanel" role="dialog" aria-modal="true" aria-labelledby="assistantTitle" hidden>
+      <header class="panel-bar">
+        <div class="panel-title" id="assistantTitle">
+          <span class="spark" aria-hidden="true">✳</span>
+          Walmart — AI Grocery Assistant
+        </div>
+        <nav class="panel-actions">
+          <a class="open-tab" href="https://walmart-business-example.onrender.com/" target="_blank" rel="noopener">Open in new tab</a>
+          <button class="panel-close" id="closeAssistant" aria-label="Close assistant">×</button>
+        </nav>
+      </header>
+
+      <!-- LIVE assistant (iframe). If CSP blocks embedding, user can “Open in new tab”. -->
+      <iframe
+        id="assistantFrame"
+        class="assistant-frame"
+        src="https://walmart-business-example.onrender.com/"
+        title="Walmart AI Grocery Assistant"
+        loading="lazy"
+      ></iframe>
+
+      <div class="fallback-note" id="fallbackNote" hidden>
+        If you don’t see the assistant above, click
+        <a href="https://walmart-business-example.onrender.com/" target="_blank" rel="noopener">Open in new tab</a>.
+      </div>
+    </section>
   </main>
 
-  <p class="sr-only">
-    Demo only. Clicking Start opens the assistant in a new tab. This page remains visible.
+  <p class="sr-only" id="assistDesc">
+    Demo only. The assistant opens in a centered panel so the Walmart page remains visible. Press Escape to close.
   </p>
 
   <script>
-    // Live Render app (VoxDoc Walmart)
-    const RENDER_URL = "https://walmart-business-example.onrender.com/";
+    const openBtn   = document.getElementById('openAssistant');
+    const panel     = document.getElementById('assistantPanel');
+    const backdrop  = document.getElementById('backdrop');
+    const closeBtn  = document.getElementById('closeAssistant');
+    const iframe    = document.getElementById('assistantFrame');
+    const fallback  = document.getElementById('fallbackNote');
 
-    document.getElementById('openAssistant').addEventListener('click', () => {
-      window.open(RENDER_URL, '_blank', 'noopener');
-    });
+    function openPanel() {
+      // “Launch” animation from the opener
+      openBtn.classList.add('launch');
+      setTimeout(() => openBtn.classList.remove('launch'), 220);
+
+      backdrop.hidden = false;
+      panel.hidden = false;
+      panel.classList.remove('fade-out');
+      panel.classList.add('panel-in');
+
+      // Soft fallback hint if iframe doesn't paint quickly (CSP).
+      setTimeout(() => { fallback.hidden = false; }, 1000);
+    }
+
+    function closePanel() {
+      panel.classList.remove('panel-in');
+      panel.classList.add('fade-out');
+      setTimeout(() => {
+        panel.hidden = true;
+        backdrop.hidden = true;
+        fallback.hidden = true;
+      }, 160);
+    }
+
+    openBtn.addEventListener('click', openPanel);
+    closeBtn.addEventListener('click', closePanel);
+    backdrop.addEventListener('click', closePanel); // click outside to close
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panel.hidden) closePanel(); });
+
+    // If the iframe loads, keep the fallback note hidden (no flashing)
+    iframe.addEventListener('load', () => { fallback.hidden = true; });
   </script>
 </body>
 </html>
