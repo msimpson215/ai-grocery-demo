@@ -12,11 +12,9 @@
       font:16px system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
       color:#111; background:#f6f7f8;
     }
-    /* Background screenshot behind */
     .bg{position:fixed; inset:0; z-index:1; overflow:hidden}
     .bg>img{width:100vw; height:100svh; object-fit:cover; object-position:center top; display:block; background:#e9ecef}
 
-    /* Clickable Walmart-style header */
     .wm-bar{
       position:fixed; top:0; left:0; right:0; z-index:3;
       display:flex; align-items:center; gap:12px;
@@ -28,12 +26,18 @@
     .wm-logo{height:28px; width:auto; border-radius:8px}
     .wm-title{font-weight:900; letter-spacing:.2px; white-space:nowrap; font-size:clamp(16px,4.2vw,20px)}
     .spacer{flex:1}
-    .badge-new{
-      background:#ff7a00; color:#fff; font-weight:900; letter-spacing:.3px;
-      padding:6px 10px; border-radius:999px; font-size:12px; line-height:1;
+
+    /* Angled ribbon */
+    .ribbon{
+      position:fixed; z-index:4;
+      top:12px; right:-36px;
+      width:160px; text-align:center;
+      background:#ff7a00; color:#fff; font-weight:900; letter-spacing:.4px;
+      padding:6px 0;
+      transform:rotate(45deg);
       box-shadow:0 6px 14px rgba(0,0,0,.18);
+      pointer-events:none; /* make sure clicks go to the header link */
     }
-    /* Optional tiny helper line under the bar */
     .helper{
       position:fixed; top:calc(50px + env(safe-area-inset-top));
       left:0; right:0; z-index:2; text-align:center; font-size:12px;
@@ -42,15 +46,15 @@
   </style>
 </head>
 <body>
-  <div class="bg"><img src="walmart_mock_.png?v=12" alt=""></div>
+  <div class="bg"><img src="walmart_mock_.png?v=13" alt=""></div>
 
-  <a class="wm-bar" href="https://walmart-business-example.onrender.com/?src=wm-header-A" target="_blank" rel="noopener">
+  <a class="wm-bar" href="https://walmart-business-example.onrender.com/?src=wm-header-B" target="_blank" rel="noopener">
     <img class="wm-logo" src="walmart_logo_blue.png" alt="Walmart logo">
     <div class="wm-title">Walmart — AI Grocery Assistant</div>
     <div class="spacer"></div>
-    <div class="badge-new">NEW</div>
   </a>
 
+  <div class="ribbon">NEW</div>
   <div class="helper" aria-hidden="true">Opens in a new tab</div>
 </body>
 </html>
