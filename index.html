@@ -2,62 +2,78 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Walmart — AI Grocery Assistant</title>
+  <title>Walmart AI Grocery Assistant</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <style>
     *,*::before,*::after{box-sizing:border-box}
     html,body{margin:0;height:100%}
     body{
-      min-height:100svh;
-      display:flex;
-      flex-direction:column;
+      min-height:100svh; overflow:hidden;
       font:16px system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      background:#f7f7f7;
-      color:#111;
+      color:#111; background:#f6f7f8;
     }
 
-    /* Blue button style reused for header */
+    /* Background screenshot (bulletproof via <img>) */
+    .bg{position:fixed; inset:0; z-index:1; overflow:hidden}
+    .bg>img{
+      width:100vw; height:100svh;
+      object-fit:cover; object-position:center top;
+      display:block; background:#e9ecef;
+    }
+
+    /* Top blue button (replaces header) */
     .wm-btn{
-      display:block;
-      text-align:center;
-      background:#0071dc;
-      color:#fff;
-      text-decoration:none;
-      font-weight:900;
+      position:fixed; top:0; left:0; right:0; z-index:3;
+      display:block; text-align:center; text-decoration:none;
+      background:#0071dc; color:#fff; font-weight:900; letter-spacing:.2px;
       padding:max(16px, env(safe-area-inset-top)) 20px 16px;
       border-radius:0 0 16px 16px;
       box-shadow:0 10px 28px rgba(0,113,220,.35);
-      letter-spacing:.2px;
+    }
+    .wm-btn:active{filter:brightness(.96)}
+
+    /* Optional tiny helper line under the button (non-clickable) */
+    .helper{
+      position:fixed; top:calc(48px + env(safe-area-inset-top));
+      left:0; right:0; z-index:2;
+      text-align:center; font-size:12px; color:#1b1b1b;
+      text-shadow:0 1px 0 rgba(255,255,255,.8);
+      pointer-events:none;
     }
 
-    .fill{flex:1;display:grid;place-items:center;padding:24px}
-
-    #start{
-      display:inline-block;
-      width:min(560px,88vw);
-      padding:16px 20px;
-      border-radius:16px;
-      text-align:center;
-      background:#0071dc;
-      color:#fff;
-      font-weight:900;
-      text-decoration:none;
-      box-shadow:0 10px 28px rgba(0,113,220,.35);
+    /* Orange “TRY” ribbon at 45° in the top-left corner */
+    .ribbon{
+      position:fixed; z-index:4;
+      top:12px; left:-36px;  /* slide left so diagonal crosses the corner */
+      width:160px; text-align:center;
+      background:#ff7a00; color:#fff; font-weight:900;
+      padding:6px 0;
+      transform:rotate(-45deg);
+      box-shadow:0 6px 14px rgba(0,0,0,.18);
+      letter-spacing:.4px;
+    }
+    @media (min-width:769px){
+      .helper{top:64px}
     }
   </style>
 </head>
 <body>
-  <!-- Top blue button version -->
+  <!-- Background Walmart mock (must exist next to this file) -->
+  <div class="bg">
+    <img src="walmart_mock_.png?v=9" alt="Walmart grocery page mock background">
+  </div>
+
+  <!-- Diagonal “TRY” badge -->
+  <div class="ribbon">TRY</div>
+
+  <!-- Top blue button (opens your Render demo in a new tab) -->
   <a class="wm-btn"
-     href="https://walmart-business-example.onrender.com/?src=wm-link"
+     href="https://walmart-business-example.onrender.com/?src=wm-top"
      target="_blank" rel="noopener">
-     Walmart — AI Grocery Assistant
+     Walmart AI Grocery Assistant
   </a>
 
-  <div class="fill">
-    <a id="start"
-       href="https://walmart-business-example.onrender.com/?src=wm-link"
-       target="_blank" rel="noopener">Start</a>
-  </div>
+  <!-- Optional hint under the button; delete if you don’t want it -->
+  <div class="helper" aria-hidden="true">Opens in a new tab</div>
 </body>
 </html>
