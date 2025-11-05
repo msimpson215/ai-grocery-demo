@@ -10,16 +10,18 @@
     body{
       min-height:100svh; overflow:hidden;
       font:16px system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      background:#eee url('walmart_mock_.png?v=7') no-repeat center top / cover;
+      background:#fff;
     }
+    .bg{position:fixed; inset:0; z-index:1; overflow:hidden}
+    .bg>img{width:100vw;height:100svh;object-fit:cover;object-position:center top;display:block;background:#eee}
     header{
-      position:sticky; top:0; text-align:center; z-index:3;
-      background:rgba(255,255,255,.92); color:#0071dc; font-weight:800;
-      padding:max(8px,env(safe-area-inset-top)) 12px 8px; border-bottom:1px solid rgba(0,0,0,.06)
+      position:fixed; top:0; left:0; right:0; z-index:2;
+      text-align:center; padding:max(8px,env(safe-area-inset-top)) 12px 8px;
+      background:rgba(255,255,255,.92); color:#0071dc; font-weight:800; border-bottom:1px solid rgba(0,0,0,.06)
     }
     #start{
       position:fixed; left:50%; transform:translateX(-50%);
-      bottom:max(16px, env(safe-area-inset-bottom)); z-index:3;
+      bottom:max(16px, env(safe-area-inset-bottom)); z-index:2;
       width:min(560px,88vw); padding:14px 18px; border-radius:14px;
       background:#0071dc; color:#fff; text-decoration:none; text-align:center; font-weight:800;
       box-shadow:0 10px 28px rgba(0,113,220,.35);
@@ -27,6 +29,7 @@
   </style>
 </head>
 <body>
+  <div class="bg"><img src="walmart_mock_.png?v=8" alt=""></div>
   <header>Walmart — AI Grocery Assistant</header>
   <a id="start" href="https://walmart-business-example.onrender.com/?src=wm-link" target="_blank" rel="noopener">Start</a>
 </body>
