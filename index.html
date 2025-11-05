@@ -4,24 +4,30 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Walmart — AI Grocery Assistant (Demo)</title>
-  <link rel="stylesheet" href="style.css?v=lock-1105c" />
+  <link rel="stylesheet" href="style.css?v=final-1106" />
 </head>
 <body>
   <main class="stage">
-    <!-- Debug overlay (toggle in CSS var) -->
-    <div class="debug-grid" aria-hidden="true"></div>
+    <!-- All visual content lives inside this frame -->
+    <div class="frame">
+      <!-- Walmart screenshot -->
+      <img class="mock" src="walmart_mock_.png?v=final-1106"
+           alt="Walmart grocery page mock" />
 
-    <!-- Blue headline banner locked to a precise track -->
-    <section class="ai-banner">
-      <a class="ai-link"
-         href="https://walmart-business-example.onrender.com/?src=wm-link"
-         target="_blank" rel="noopener">
-        <div class="ai-banner-title">AI Grocery Assistant</div>
-        <div class="ai-banner-sub">Let our AI Assistant assist you with your grocery shopping</div>
-      </a>
-    </section>
+      <!-- Blue banner -->
+      <section class="ai-banner">
+        <a class="ai-link"
+           href="https://walmart-business-example.onrender.com/?src=wm-link"
+           target="_blank" rel="noopener">
+          <div class="ai-banner-title">AI Grocery Assistant</div>
+          <div class="ai-banner-sub">
+            Let our AI Assistant assist you with your grocery shopping
+          </div>
+        </a>
+      </section>
+    </div>
 
-    <!-- Always-visible fallback Start -->
+    <!-- Fixed fallback Start button -->
     <a class="fallback-cta"
        href="https://walmart-business-example.onrender.com/?src=wm-link-fallback"
        target="_blank" rel="noopener"
@@ -30,6 +36,7 @@
     </a>
   </main>
 
-  <div class="ver">lock-1105c</div>
+  <!-- Version tag -->
+  <div class="ver">final-1106</div>
 </body>
 </html>
