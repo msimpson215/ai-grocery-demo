@@ -1,80 +1,87 @@
 /* Reset + base */
-* { box-sizing: border-box; }
-html, body { height: 100%; margin: 0; }
-body {
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  background: #000;
-  color: #0f1111;
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+  background:#000;
+  color:#0f1111;
 }
 
 /* Stage + screenshot */
-.stage { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
-.mock  { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+.stage{position:relative;width:100vw;height:100vh;overflow:hidden}
+.mock{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
 
-/* Theme vars */
+/* Theme variables */
 :root{
-  --wm-blue: #0071ce;
-  --wm-blue-hover: #005ea3;
-  --banner-top: 19%;   /* <<< move banner up/down if needed */
+  --wm-blue:#0071ce;
+  --wm-blue-hover:#005ea3;
+  --banner-top:24.5%;
 }
 
-/* Big blue banner */
+/* Smooth fade-in */
+@keyframes fadeIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+
+/* Banner */
 .ai-banner{
-  position: absolute;
-  top: var(--banner-top);
-  left: 0;
-  width: 100%;
-  background: var(--wm-blue);
-  text-align: center;
-  padding: 12px 0 14px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-  z-index: 10; /* sits above the screenshot */
+  position:absolute;
+  top:var(--banner-top);
+  left:0;
+  width:100%;
+  background:var(--wm-blue);
+  text-align:center;
+  padding:12px 0 14px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.15);
+  z-index:10;
+  opacity:0;
+  animation:fadeIn 1s ease-out forwards;
 }
 .ai-link{
-  color: #fff;
-  text-decoration: none;
-  display: block;
+  color:#fff;
+  text-decoration:none;
+  display:block;
 }
 .ai-banner-title{
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: 0.3px;
+  font-size:22px;
+  font-weight:700;
+  letter-spacing:0.3px;
 }
 .ai-banner-sub{
-  font-size: 14px;
-  color: rgba(255,255,255,0.92);
-  margin-top: 4px;
+  font-size:14px;
+  color:rgba(255,255,255,0.92);
+  margin-top:4px;
 }
-.ai-banner:hover{ background: var(--wm-blue-hover); }
+.ai-banner:hover{background:var(--wm-blue-hover)}
 
-/* Secondary fixed pill (safety button if banner is off-screen) */
+/* Safety "Start" pill */
 .fallback-cta{
-  position: fixed;
-  right: 14px;
-  bottom: 14px;
-  z-index: 11;
-  display: inline-block;
-  padding: 10px 14px;
-  border-radius: 999px;
-  background: var(--wm-blue);
-  color: #fff;
-  font-weight: 700;
-  font-size: 14px;
-  text-decoration: none;
-  border: 1px solid rgba(0,0,0,0.05);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.16);
+  position:fixed;
+  right:14px;
+  bottom:14px;
+  z-index:11;
+  display:inline-block;
+  padding:10px 14px;
+  border-radius:999px;
+  background:var(--wm-blue);
+  color:#fff;
+  font-weight:700;
+  font-size:14px;
+  text-decoration:none;
+  border:1px solid rgba(0,0,0,0.05);
+  box-shadow:0 6px 18px rgba(0,0,0,0.16);
+  opacity:0;
+  animation:fadeIn 1s ease-out 0.5s forwards;
 }
-.fallback-cta:hover{ background: var(--wm-blue-hover); }
+.fallback-cta:hover{background:var(--wm-blue-hover)}
 
 /* Mobile tweaks */
-@media (max-width: 960px){
-  :root{ --banner-top: 17%; }
-  .ai-banner-title{ font-size: 19px; }
-  .ai-banner-sub{ font-size: 13px; }
+@media (max-width:960px){
+  :root{--banner-top:23%}
+  .ai-banner-title{font-size:19px}
+  .ai-banner-sub{font-size:13px}
 }
 
 /* version tag */
 .ver{
-  position: fixed; right: 8px; bottom: 6px;
-  font: 12px/1 monospace; color: #888; opacity: .6;
+  position:fixed;right:8px;bottom:6px;
+  font:12px/1 monospace;color:#888;opacity:.6;
 }
