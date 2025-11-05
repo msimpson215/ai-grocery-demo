@@ -3,96 +3,94 @@
 html,body{height:100%;margin:0}
 body{
   font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial;
-  background:#000;
+  background:#000; /* hides gutters while image loads */
   color:#0f1111;
 }
 
-/* Stage + screenshot */
-.stage{position:relative;width:100vw;height:100vh;overflow:hidden}
-.mock{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:contain;       /* prevents image from zooming too large */
-  object-position:center top;
-  display:block;
-}
-
-/* Theme colors and placement */
+/* ───────────────────────────────────────────────────────────────
+   CONFIG (change these only)
+   ---------------------------------------------------------------- */
 :root{
-  --wm-blue:#1a75cf;        /* Walmart royal blue */
-  --wm-blue-hover:#135ea6;
-  --banner-top:36%;          /* banner moved lower */
+  /* Walmart blue (closer to current web usage) */
+  --wm-blue:#0071dc;           /* primary */
+  --wm-blue-hover:#005fb8;     /* hover */
+
+  /* Background fit mode: choose "cover" (immersive) or "contain" (whole image) */
+  --bg-fit: cover;             /* cover | contain */
+
+  /* Banner vertical position as % of viewport height (desktop) */
+  --banner-top-desktop: 36%;   /* move this up/down */
+  /* Banner vertical position for phones */
+  --banner-top-mobile: 34%;
+
+  /* Toggle alignment grid (0 = off, 1 = on) */
+  --show-grid: 0;
 }
 
-/* Fade animation */
-@keyframes fadeIn{
-  from{opacity:0;transform:translateY(-5px)}
-  to{opacity:1;transform:translateY(0)}
+/* ───────────────────────────────────────────────────────────────
+   Stage with background screenshot
+   ---------------------------------------------------------------- */
+.stage{
+  position:relative;
+  width:100vw; height:100vh;
+  overflow:hidden;
+  /* Use screenshot as background so scaling is consistent */
+  background:
+    url("walmart_mock_.png?v=lock-1105c")
+    center top / var(--bg-fit) no-repeat #000;
 }
 
-/* Banner */
+/* Optional alignment grid to line up with category row quickly */
+.debug-grid{
+  position:absolute; inset:0; pointer-events:none; z-index:2;
+  opacity: calc(var(--show-grid) * 1);
+  background-image:
+    linear-gradient(to bottom, rgba(0,0,0,.12) 1px, transparent 1px),
+    linear-gradient(to right, rgba(0,0,0,.08) 1px, transparent 1px);
+  background-size: 12px 12px, 12px 12px;
+}
+
+/* Smooth fade */
+@keyframes fadeIn{ from{opacity:0;transform:translateY(-5px)} to{opacity:1;transform:translateY(0)} }
+
+/* ───────────────────────────────────────────────────────────────
+   Blue banner (edge-to-edge, sits on a precise track)
+   ---------------------------------------------------------------- */
 .ai-banner{
-  position:absolute;
-  top:var(--banner-top);
-  left:0;
-  width:100%;
-  background:var(--wm-blue);
+  position:absolute; left:0; width:100%;
+  top: var(--banner-top-desktop);
+  background: var(--wm-blue);
   text-align:center;
-  padding:12px 0 14px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.15);
-  z-index:10;
-  opacity:0;
-  animation:fadeIn 1s ease-out forwards;
+  padding: 12px 0 14px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  z-index: 3;
+  opacity:0; animation: fadeIn 500ms ease-out forwards;
 }
-.ai-link{
-  color:#fff;
-  text-decoration:none;
-  display:block;
-}
-.ai-banner-title{
-  font-size:22px;
-  font-weight:700;
-  letter-spacing:0.3px;
-}
-.ai-banner-sub{
-  font-size:14px;
-  color:rgba(255,255,255,0.92);
-  margin-top:4px;
-}
-.ai-banner:hover{background:var(--wm-blue-hover)}
+.ai-link{ color:#fff; text-decoration:none; display:block; }
+.ai-banner-title{ font-size:22px; font-weight:700; letter-spacing:.3px; }
+.ai-banner-sub{ font-size:14px; color:rgba(255,255,255,.92); margin-top:4px; }
+.ai-banner:hover{ background: var(--wm-blue-hover); }
 
-/* Fallback "Start" button */
+/* Safety Start pill */
 .fallback-cta{
-  position:fixed;
-  right:14px;
-  bottom:14px;
-  z-index:11;
-  display:inline-block;
-  padding:10px 14px;
-  border-radius:999px;
-  background:var(--wm-blue);
-  color:#fff;
-  font-weight:700;
-  font-size:14px;
-  text-decoration:none;
-  border:1px solid rgba(0,0,0,0.05);
-  box-shadow:0 6px 18px rgba(0,0,0,0.16);
-  opacity:0;
-  animation:fadeIn 1s ease-out 0.5s forwards;
+  position:fixed; right:14px; bottom:14px; z-index:4;
+  display:inline-block; padding:10px 14px; border-radius:999px;
+  background:var(--wm-blue); color:#fff; font-weight:700; font-size:14px;
+  text-decoration:none; border:1px solid rgba(0,0,0,.05);
+  box-shadow:0 6px 18px rgba(0,0,0,.16);
+  opacity:0; animation: fadeIn 600ms ease-out 200ms forwards;
 }
-.fallback-cta:hover{background:var(--wm-blue-hover)}
+.fallback-cta:hover{ background: var(--wm-blue-hover); }
 
-/* Mobile tweaks */
-@media (max-width:960px){
-  :root{--banner-top:34%}
-  .ai-banner-title{font-size:19px}
-  .ai-banner-sub{font-size:13px}
+/* Mobile tuning */
+@media (max-width: 960px){
+  .ai-banner{ top: var(--banner-top-mobile); }
+  .ai-banner-title{ font-size:19px; }
+  .ai-banner-sub{ font-size:13px; }
 }
 
 /* Version label */
 .ver{
-  position:fixed;right:8px;bottom:6px;
-  font:12px/1 monospace;color:#888;opacity:.6;
+  position:fixed; right:8px; bottom:6px;
+  font:12px/1 monospace; color:#888; opacity:.6; z-index:5;
 }
