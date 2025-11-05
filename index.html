@@ -1,96 +1,18 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>Walmart — AI Grocery Assistant (Self-Check)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <style>
-    *,*::before,*::after{box-sizing:border-box}
-    html,body{margin:0;padding:0;height:100%}
-    :root{--wm-blue:#0071dc;--wm-blue-dark:#004f9a;--bg: #fff;--shadow:0 8px 24px rgba(0,0,0,.18)}
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;min-height:100svh;overflow:hidden;background:var(--bg)}
-    /* Fill screen deterministically with an IMG, not CSS background */
-    .mock-wrap{position:fixed;inset:0;z-index:1;overflow:hidden}
-    #mock{width:100vw;height:100svh;object-fit:cover;object-position:center top;display:block;background:#eee}
-    /* Banner + Start button */
-    #wm-banner{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;justify-content:center;
-      padding:max(8px,env(safe-area-inset-top)) 12px 8px;background:rgba(255,255,255,.92);backdrop-filter:saturate(180%) blur(6px);
-      border-bottom:1px solid rgba(0,0,0,.06);color:var(--wm-blue);font-weight:800;font-size:clamp(16px,3.8vw,22px)}
-    #start{position:fixed;left:50%;transform:translateX(-50%);bottom:max(16px,env(safe-area-inset-bottom));z-index:50;
-      width:min(560px,88vw);padding:14px 18px;background:var(--wm-blue);color:#fff;border:0;border-radius:14px;
-      font-weight:800;font-size:clamp(16px,4.2vw,20px);text-decoration:none;text-align:center;box-shadow:var(--shadow)}
-    #start:hover{background:#004f9a}
-    /* Debug panel */
-    #dbg{position:fixed;right:8px;top:max(56px,calc(env(safe-area-inset-top) + 8px));z-index:60;background:rgba(0,0,0,.65);
-      color:#fff;font:12px/1.35 ui-monospace,Menlo,Consolas,monospace;border-radius:10px;padding:10px 12px;max-width:72vw}
-    #dbg b{color:#ffd94a}
-    #dbg button{margin-top:6px;border:0;border-radius:8px;padding:6px 8px;background:#fff;color:#111;cursor:pointer}
-    /* Optional grid overlay to prove full-bleed coverage */
-    #grid{position:fixed;inset:0;z-index:2;pointer-events:none;background-size:20px 20px,100px 100px;
-      background-image:linear-gradient(rgba(0,0,0,.06) 1px,transparent 1px),linear-gradient(rgba(0,0,0,.08) 1px,transparent 1px);
-      display:none}
-    #grid.show{display:block}
-  </style>
-</head>
-<body>
-  <div class="mock-wrap">
-    <!-- bump query if you change the image to beat cache -->
-    <img id="mock" src="walmart_mock_.png?v=4" alt="Walmart mock"
-         onerror="console.warn('❌ Image not found: walmart_mock_.png'); window.__imgErr=true;">
-  </div>
-  <div id="grid" aria-hidden="true"></div>
-
-  <header id="wm-banner">Walmart — AI Grocery Assistant</header>
-
-  <a id="start"
-     href="https://walmart-business-example.onrender.com/?src=wm-link"
-     target="_blank" rel="noopener">Start</a>
-
-  <!-- tiny diagnostics panel -->
-  <div id="dbg" role="status" aria-live="polite">
-    <div><b>Viewport:</b> <span id="vps">—</span></div>
-    <div><b>svh px:</b> <span id="svh">—</span> &nbsp; <b>dpr:</b> <span id="dpr">—</span></div>
-    <div><b>IMG loaded:</b> <span id="il">—</span> &nbsp; <b>natural:</b> <span id="nw">—</span>x<span id="nh">—</span></div>
-    <div><b>CSS active:</b> <span id="cssok">yes</span></div>
-    <button id="tog">Toggle grid</button>
-  </div>
-
-  <script>
-    const els = {
-      vps: document.getElementById('vps'),
-      svh: document.getElementById('svh'),
-      dpr: document.getElementById('dpr'),
-      il:  document.getElementById('il'),
-      nw:  document.getElementById('nw'),
-      nh:  document.getElementById('nh'),
-      grid:document.getElementById('grid'),
-      tog: document.getElementById('tog'),
-      img: document.getElementById('mock'),
-    };
-    function update(){
-      els.vps.textContent = `${window.innerWidth}×${window.innerHeight}`;
-      // compute 100svh in px by creating a temp element
-      const t = document.createElement('div');
-      t.style.height = '100svh';
-      t.style.position = 'absolute'; t.style.visibility = 'hidden';
-      document.body.appendChild(t);
-      const svhPx = t.getBoundingClientRect().height|0;
-      document.body.removeChild(t);
-      els.svh.textContent = svhPx;
-      els.dpr.textContent = window.devicePixelRatio.toFixed(2);
-      const ok = !window.__imgErr && els.img.complete;
-      els.il.textContent = ok ? 'yes' : 'no';
-      els.nw.textContent = els.img.naturalWidth || '—';
-      els.nh.textContent = els.img.naturalHeight || '—';
-    }
-    ['load','resize','orientationchange','pageshow','visibilitychange'].forEach(ev =>
-      window.addEventListener(ev, update, {passive:true}));
-    els.img.addEventListener('load', update, {once:false});
-    els.img.addEventListener('error', update, {once:false});
-    document.getElementById('tog').addEventListener('click', ()=> {
-      els.grid.classList.toggle('show');
-    });
-    update();
-  </script>
-</body>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Start</title>
+    <style>
+      html,body{margin:0;height:100%}
+      body{display:grid;place-items:center;font:16px system-ui}
+      a{display:inline-block;padding:14px 18px;border-radius:14px;
+        background:#0071dc;color:#fff;text-decoration:none;font-weight:800}
+    </style>
+  </head>
+  <body>
+    <a href="https://walmart-business-example.onrender.com/?src=wm-link"
+       target="_blank" rel="noopener">Start</a>
+  </body>
 </html>
