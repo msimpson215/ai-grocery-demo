@@ -9,17 +9,28 @@ body{
 
 /* Stage + screenshot */
 .stage{position:relative;width:100vw;height:100vh;overflow:hidden}
-.mock{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
-
-/* Theme variables */
-:root{
-  --wm-blue:#0071ce;
-  --wm-blue-hover:#005ea3;
-  --banner-top:24.5%;
+.mock{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;       /* prevents image from zooming too large */
+  object-position:center top;
+  display:block;
 }
 
-/* Smooth fade-in */
-@keyframes fadeIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+/* Theme colors and placement */
+:root{
+  --wm-blue:#1a75cf;        /* Walmart royal blue */
+  --wm-blue-hover:#135ea6;
+  --banner-top:36%;          /* banner moved lower */
+}
+
+/* Fade animation */
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(-5px)}
+  to{opacity:1;transform:translateY(0)}
+}
 
 /* Banner */
 .ai-banner{
@@ -52,7 +63,7 @@ body{
 }
 .ai-banner:hover{background:var(--wm-blue-hover)}
 
-/* Safety "Start" pill */
+/* Fallback "Start" button */
 .fallback-cta{
   position:fixed;
   right:14px;
@@ -75,12 +86,12 @@ body{
 
 /* Mobile tweaks */
 @media (max-width:960px){
-  :root{--banner-top:23%}
+  :root{--banner-top:34%}
   .ai-banner-title{font-size:19px}
   .ai-banner-sub{font-size:13px}
 }
 
-/* version tag */
+/* Version label */
 .ver{
   position:fixed;right:8px;bottom:6px;
   font:12px/1 monospace;color:#888;opacity:.6;
