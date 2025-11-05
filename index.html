@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Walmart — AI Grocery Assistant (Demo)</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -11,85 +11,20 @@
     <!-- Full-screen Walmart screenshot -->
     <img class="mock" src="walmart_mock_.png" alt="Walmart grocery page mock" />
 
-    <!-- Walmart-like CTA card (fixed in place, not floaty) -->
+    <!-- Solid Walmart-style button card -->
     <section class="cta-card" aria-labelledby="ctaTitle">
       <div class="cta-text">
         <span id="ctaTitle" class="cta-title">Let our AI Grocery Assistant assist you today</span>
-        <span class="cta-sub">Opens right here — looks and feels like Walmart.</span>
+        <span class="cta-sub">Opens in a new tab — your page stays put.</span>
       </div>
-      <button id="openAssistant" class="cta-btn" aria-label="Open AI Grocery Assistant">Start</button>
-    </section>
 
-    <!-- Backdrop + centered panel (both hidden until click) -->
-    <div class="backdrop" id="backdrop" hidden></div>
-
-    <section class="assistant-panel" id="assistantPanel" role="dialog" aria-modal="true" aria-labelledby="assistantTitle" hidden>
-      <header class="panel-bar">
-        <div class="panel-title" id="assistantTitle">
-          <span class="spark" aria-hidden="true">✳</span>
-          Walmart — AI Grocery Assistant
-        </div>
-        <nav class="panel-actions">
-          <a class="open-tab" href="https://walmart-business-example.onrender.com/" target="_blank" rel="noopener">Open in new tab</a>
-          <button class="panel-close" id="closeAssistant" aria-label="Close assistant">×</button>
-        </nav>
-      </header>
-
-      <!-- We attach the iframe ONLY after click (so nothing loads or flashes on page load) -->
-      <div class="frame-mount" id="frameMount"></div>
-
-      <div class="fallback-note" id="fallbackNote" hidden>
-        If you don’t see the assistant above, click
-        <a href="https://walmart-business-example.onrender.com/" target="_blank" rel="noopener">Open in new tab</a>.
-      </div>
+      <!-- Button -->
+      <a class="cta-btn"
+         href="https://walmart-business-example.onrender.com/?src=wm-link"
+         target="_blank" rel="noopener">
+        Start
+      </a>
     </section>
   </main>
-
-  <script>
-    const openBtn   = document.getElementById('openAssistant');
-    const panel     = document.getElementById('assistantPanel');
-    const backdrop  = document.getElementById('backdrop');
-    const closeBtn  = document.getElementById('closeAssistant');
-    const mount     = document.getElementById('frameMount');
-    const fallback  = document.getElementById('fallbackNote');
-
-    let iframeAttached = false;
-
-    function openPanel() {
-      backdrop.hidden = false;
-      panel.hidden = false;
-      panel.classList.remove('fade-out');
-      panel.classList.add('panel-in');
-
-      // Attach the iframe on first open (so nothing shows on load)
-      if (!iframeAttached) {
-        const iframe = document.createElement('iframe');
-        iframe.className = 'assistant-frame';
-        iframe.title = 'Walmart AI Grocery Assistant';
-        iframe.loading = 'lazy';
-        iframe.src = 'https://walmart-business-example.onrender.com/';
-        iframe.addEventListener('load', () => { fallback.hidden = true; });
-        mount.appendChild(iframe);
-        iframeAttached = true;
-        // Soft fallback if the frame is blocked by CSP
-        setTimeout(() => { fallback.hidden = false; }, 1000);
-      }
-    }
-
-    function closePanel() {
-      panel.classList.remove('panel-in');
-      panel.classList.add('fade-out');
-      setTimeout(() => {
-        panel.hidden = true;
-        backdrop.hidden = true;
-        fallback.hidden = true;
-      }, 160);
-    }
-
-    openBtn.addEventListener('click', openPanel);
-    backdrop.addEventListener('click', closePanel);
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panel.hidden) closePanel(); });
-    if (closeBtn) closeBtn.addEventListener('click', closePanel);
-  </script>
 </body>
 </html>
