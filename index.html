@@ -4,21 +4,32 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Walmart — AI Grocery Assistant (Demo)</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=ban-1105a" />
 </head>
 <body>
   <main class="stage">
-    <!-- Walmart screenshot -->
-    <img class="mock" src="walmart_mock_.png" alt="Walmart grocery page mock" />
+    <!-- Full-screen Walmart screenshot -->
+    <img class="mock" src="walmart_mock_.png?v=ban-1105a" alt="Walmart grocery page mock" />
 
-    <!-- Blue banner for AI Grocery Assistant -->
+    <!-- Blue headline banner (big, across the top) -->
     <section class="ai-banner">
-      <a href="https://walmart-business-example.onrender.com/?src=wm-link"
+      <a class="ai-link" href="https://walmart-business-example.onrender.com/?src=wm-link"
          target="_blank" rel="noopener">
         <div class="ai-banner-title">AI Grocery Assistant</div>
-        <div class="ai-banner-sub">Let our AI Assistant help you with your grocery shopping</div>
+        <div class="ai-banner-sub">Let our AI Assistant assist you with your grocery shopping</div>
       </a>
     </section>
+
+    <!-- Secondary safety CTA (fixed; always visible) -->
+    <a class="fallback-cta"
+       href="https://walmart-business-example.onrender.com/?src=wm-link-fallback"
+       target="_blank" rel="noopener"
+       aria-label="Open AI Grocery Assistant">
+      Start
+    </a>
   </main>
+
+  <!-- tiny version tag -->
+  <div class="ver">ban-1105a</div>
 </body>
 </html>
