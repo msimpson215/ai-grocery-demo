@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Walmart AI Grocery Assistant</title>
+  <title>Walmart — AI Grocery Assistant</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <style>
     *,*::before,*::after{box-sizing:border-box}
@@ -12,68 +12,45 @@
       font:16px system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
       color:#111; background:#f6f7f8;
     }
-
-    /* Background screenshot (bulletproof via <img>) */
+    /* Background screenshot behind */
     .bg{position:fixed; inset:0; z-index:1; overflow:hidden}
-    .bg>img{
-      width:100vw; height:100svh;
-      object-fit:cover; object-position:center top;
-      display:block; background:#e9ecef;
-    }
+    .bg>img{width:100vw; height:100svh; object-fit:cover; object-position:center top; display:block; background:#e9ecef}
 
-    /* Top blue button (replaces header) */
-    .wm-btn{
+    /* Clickable Walmart-style header */
+    .wm-bar{
       position:fixed; top:0; left:0; right:0; z-index:3;
-      display:block; text-align:center; text-decoration:none;
-      background:#0071dc; color:#fff; font-weight:900; letter-spacing:.2px;
-      padding:max(16px, env(safe-area-inset-top)) 20px 16px;
-      border-radius:0 0 16px 16px;
-      box-shadow:0 10px 28px rgba(0,113,220,.35);
+      display:flex; align-items:center; gap:12px;
+      padding:max(10px, env(safe-area-inset-top)) 14px 10px;
+      background:#0071dc; color:#fff; text-decoration:none;
+      border-radius:0 0 16px 16px; box-shadow:0 10px 28px rgba(0,113,220,.35);
     }
-    .wm-btn:active{filter:brightness(.96)}
-
-    /* Optional tiny helper line under the button (non-clickable) */
-    .helper{
-      position:fixed; top:calc(48px + env(safe-area-inset-top));
-      left:0; right:0; z-index:2;
-      text-align:center; font-size:12px; color:#1b1b1b;
-      text-shadow:0 1px 0 rgba(255,255,255,.8);
-      pointer-events:none;
-    }
-
-    /* Orange “TRY” ribbon at 45° in the top-left corner */
-    .ribbon{
-      position:fixed; z-index:4;
-      top:12px; left:-36px;  /* slide left so diagonal crosses the corner */
-      width:160px; text-align:center;
-      background:#ff7a00; color:#fff; font-weight:900;
-      padding:6px 0;
-      transform:rotate(-45deg);
+    .wm-bar:hover{filter:brightness(.98)}
+    .wm-logo{height:28px; width:auto; border-radius:8px}
+    .wm-title{font-weight:900; letter-spacing:.2px; white-space:nowrap; font-size:clamp(16px,4.2vw,20px)}
+    .spacer{flex:1}
+    .badge-new{
+      background:#ff7a00; color:#fff; font-weight:900; letter-spacing:.3px;
+      padding:6px 10px; border-radius:999px; font-size:12px; line-height:1;
       box-shadow:0 6px 14px rgba(0,0,0,.18);
-      letter-spacing:.4px;
     }
-    @media (min-width:769px){
-      .helper{top:64px}
+    /* Optional tiny helper line under the bar */
+    .helper{
+      position:fixed; top:calc(50px + env(safe-area-inset-top));
+      left:0; right:0; z-index:2; text-align:center; font-size:12px;
+      color:#1b1b1b; text-shadow:0 1px 0 rgba(255,255,255,.8); pointer-events:none;
     }
   </style>
 </head>
 <body>
-  <!-- Background Walmart mock (must exist next to this file) -->
-  <div class="bg">
-    <img src="walmart_mock_.png?v=9" alt="Walmart grocery page mock background">
-  </div>
+  <div class="bg"><img src="walmart_mock_.png?v=12" alt=""></div>
 
-  <!-- Diagonal “TRY” badge -->
-  <div class="ribbon">TRY</div>
-
-  <!-- Top blue button (opens your Render demo in a new tab) -->
-  <a class="wm-btn"
-     href="https://walmart-business-example.onrender.com/?src=wm-top"
-     target="_blank" rel="noopener">
-     Walmart AI Grocery Assistant
+  <a class="wm-bar" href="https://walmart-business-example.onrender.com/?src=wm-header-A" target="_blank" rel="noopener">
+    <img class="wm-logo" src="walmart_logo_blue.png" alt="Walmart logo">
+    <div class="wm-title">Walmart — AI Grocery Assistant</div>
+    <div class="spacer"></div>
+    <div class="badge-new">NEW</div>
   </a>
 
-  <!-- Optional hint under the button; delete if you don’t want it -->
   <div class="helper" aria-hidden="true">Opens in a new tab</div>
 </body>
 </html>
