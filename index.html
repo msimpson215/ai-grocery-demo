@@ -10,46 +10,24 @@
     body{
       min-height:100svh; overflow:hidden;
       font:16px system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      background:#f6f7f8; color:#111;
+      background:#eee url('walmart_mock_.png?v=7') no-repeat center top / cover;
     }
     header{
-      position:sticky; top:0; z-index:3;
-      display:flex; align-items:center; justify-content:center;
-      background:#fff; color:#0071dc; font-weight:800;
-      padding:max(10px,env(safe-area-inset-top)) 16px 10px;
-      border-bottom:1px solid rgba(0,0,0,.06);
-      letter-spacing:.2px;
+      position:sticky; top:0; text-align:center; z-index:3;
+      background:rgba(255,255,255,.92); color:#0071dc; font-weight:800;
+      padding:max(8px,env(safe-area-inset-top)) 12px 8px; border-bottom:1px solid rgba(0,0,0,.06)
     }
-    main{position:fixed; inset:56px 0 86px 0; overflow:auto; -webkit-overflow-scrolling:touch; padding:14px}
-    .grid{display:grid; gap:12px; grid-template-columns:repeat(2,minmax(0,1fr))}
-    .card{background:#fff;border-radius:14px;padding:10px;box-shadow:0 6px 18px rgba(0,0,0,.08)}
-    .ph{height:84px;border-radius:10px;background:linear-gradient(135deg, rgba(0,0,0,.06), rgba(0,0,0,.02))}
-    .line{height:10px;border-radius:6px;background:#e9ecef;margin-top:8px}
-    .line.sm{width:60%}
     #start{
       position:fixed; left:50%; transform:translateX(-50%);
-      bottom:max(16px, env(safe-area-inset-bottom)); z-index:4;
+      bottom:max(16px, env(safe-area-inset-bottom)); z-index:3;
       width:min(560px,88vw); padding:14px 18px; border-radius:14px;
-      background:#0071dc; color:#fff; text-decoration:none; text-align:center;
-      font-weight:800; box-shadow:0 10px 28px rgba(0,113,220,.35);
-      transition:transform .12s ease, background .15s ease;
+      background:#0071dc; color:#fff; text-decoration:none; text-align:center; font-weight:800;
+      box-shadow:0 10px 28px rgba(0,113,220,.35);
     }
-    #start:active{transform:translateX(-50%) scale(.98)}
-    @media (min-width:769px){ main{inset:64px 0 96px 0} }
   </style>
 </head>
 <body>
   <header>Walmart — AI Grocery Assistant</header>
-  <main aria-label="Mock grid">
-    <div class="grid">
-      <div class="card"><div class="ph"></div><div class="line"></div><div class="line sm"></div></div>
-      <div class="card"><div class="ph"></div><div class="line"></div><div class="line sm"></div></div>
-      <div class="card"><div class="ph"></div><div class="line"></div><div class="line sm"></div></div>
-      <div class="card"><div class="ph"></div><div class="line"></div><div class="line sm"></div></div>
-      <div class="card"><div class="ph"></div><div class="line"></div><div class="line sm"></div></div>
-      <div class="card"><div class="ph"></div><div class="line"></div><div class="line sm"></div></div>
-    </div>
-  </main>
   <a id="start" href="https://walmart-business-example.onrender.com/?src=wm-link" target="_blank" rel="noopener">Start</a>
 </body>
 </html>
