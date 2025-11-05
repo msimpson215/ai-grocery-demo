@@ -5,14 +5,12 @@
   <title>Walmart — AI Grocery Assistant</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <style>
-    /* Walmart-ish, zero assets */
     *,*::before,*::after{box-sizing:border-box}
     html,body{margin:0;height:100%}
     body{
       min-height:100svh; overflow:hidden;
       font:16px system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      background:#f6f7f8;
-      color:#111;
+      background:#f6f7f8; color:#111;
     }
     header{
       position:sticky; top:0; z-index:3;
@@ -22,28 +20,11 @@
       border-bottom:1px solid rgba(0,0,0,.06);
       letter-spacing:.2px;
     }
-    .shelf{
-      height:14px; background:#e6e8ea; margin:18px 0; box-shadow:inset 0 -1px 0 rgba(0,0,0,.05);
-    }
-    main{
-      position:fixed; inset:56px 0 86px 0; /* header height ≈56px, button area ≈86px */
-      overflow:auto; -webkit-overflow-scrolling:touch; padding:14px 14px 0;
-    }
-    .grid{
-      display:grid; gap:12px;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-    }
-    .card{
-      background:#fff; border-radius:14px; padding:10px; 
-      box-shadow:0 6px 18px rgba(0,0,0,.08);
-      display:flex; flex-direction:column; gap:8px;
-    }
-    .ph{
-      height:84px; border-radius:10px;
-      background:
-        linear-gradient(135deg, rgba(0,0,0,.06), rgba(0,0,0,.02));
-    }
-    .line{height:10px; border-radius:6px; background:#e9ecef}
+    main{position:fixed; inset:56px 0 86px 0; overflow:auto; -webkit-overflow-scrolling:touch; padding:14px}
+    .grid{display:grid; gap:12px; grid-template-columns:repeat(2,minmax(0,1fr))}
+    .card{background:#fff;border-radius:14px;padding:10px;box-shadow:0 6px 18px rgba(0,0,0,.08)}
+    .ph{height:84px;border-radius:10px;background:linear-gradient(135deg, rgba(0,0,0,.06), rgba(0,0,0,.02))}
+    .line{height:10px;border-radius:6px;background:#e9ecef;margin-top:8px}
     .line.sm{width:60%}
     #start{
       position:fixed; left:50%; transform:translateX(-50%);
@@ -54,16 +35,12 @@
       transition:transform .12s ease, background .15s ease;
     }
     #start:active{transform:translateX(-50%) scale(.98)}
-    @media (min-width:769px){
-      main{inset:64px 0 96px 0}
-    }
+    @media (min-width:769px){ main{inset:64px 0 96px 0} }
   </style>
 </head>
 <body>
   <header>Walmart — AI Grocery Assistant</header>
-
-  <main aria-label="Mock content">
-    <div class="shelf"></div>
+  <main aria-label="Mock grid">
     <div class="grid">
       <div class="card"><div class="ph"></div><div class="line"></div><div class="line sm"></div></div>
       <div class="card"><div class="ph"></div><div class="line"></div><div class="line sm"></div></div>
@@ -72,11 +49,7 @@
       <div class="card"><div class="ph"></div><div class="line"></div><div class="line sm"></div></div>
       <div class="card"><div class="ph"></div><div class="line"></div><div class="line sm"></div></div>
     </div>
-    <div class="shelf"></div>
   </main>
-
-  <a id="start"
-     href="https://walmart-business-example.onrender.com/?src=wm-link"
-     target="_blank" rel="noopener">Start</a>
+  <a id="start" href="https://walmart-business-example.onrender.com/?src=wm-link" target="_blank" rel="noopener">Start</a>
 </body>
 </html>
