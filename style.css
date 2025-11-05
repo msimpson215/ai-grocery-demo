@@ -1,126 +1,89 @@
 /* Reset + base */
-* { box-sizing: border-box; }
-html, body { height: 100%; margin: 0; }
-body {
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-  background: #000;
-  color: #0f1111;
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+  background:#fff; /* white to avoid black gutters on contain */
+  color:#0f1111;
 }
 
-/* ───────────────────────────────────────────
-   CONFIGURABLE VARIABLES
-   ─────────────────────────────────────────── */
-:root {
-  --wm-blue: #0071dc;          /* Walmart royal blue */
-  --wm-blue-hover: #005fb8;    /* hover blue */
-  --banner-top-desktop: 36%;   /* vertical placement (desktop) */
-  --banner-top-mobile: 34%;    /* vertical placement (mobile) */
-  --phone-scale: 0.86;         /* shrink entire frame on phones */
+/* Config knobs */
+:root{
+  --wm-blue:#0071dc;
+  --wm-blue-hover:#005fb8;
+
+  /* banner tracks (percent of viewport height for simplicity) */
+  --banner-top-desktop:36%;
+  --banner-top-mobile:28%; /* usually a bit higher on phones when the header/logo is visible */
 }
 
-/* Stage uses Android-friendly viewport height */
-.stage {
-  position: relative;
-  width: 100vw;
-  height: 100dvh;
-  overflow: hidden;
+/* Stage fills viewport (Android-friendly) */
+.stage{
+  position:relative;
+  width:100vw;
+  height:100dvh;
+  overflow:hidden;
+  background:#fff;
 }
 
-/* Frame contains screenshot + banner so they scale together */
-.frame {
-  position: absolute;
-  inset: 0;
-  transform-origin: top center;
-  transform: scale(var(--phone-scale));
+/* Frame holds screenshot + banner (no transform scaling) */
+.frame{
+  position:absolute;
+  inset:0;
 }
 
-/* Screenshot background */
-.mock {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;        /* immersive */
-  object-position: center top;
-  display: block;
+/* Screenshot: contain with white background so it never looks “too big” or leaves black */
+.mock{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;      /* show entire image; add white margins if needed */
+  object-position:center top;
+  background:#fff;         /* fills any letterbox with white */
+  display:block;
 }
 
-/* Fade-in animation */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-5px); }
-  to   { opacity: 1; transform: translateY(0); }
+/* Fade */
+@keyframes fadeIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+
+/* Banner */
+.ai-banner{
+  position:absolute;
+  left:0; width:100%;
+  top:var(--banner-top-desktop);
+  background:var(--wm-blue);
+  text-align:center;
+  padding:12px 0 14px;
+  box-shadow:0 4px 10px rgba(0,0,0,.15);
+  z-index:2;
+  opacity:0; animation:fadeIn 500ms ease-out forwards;
+}
+.ai-link{color:#fff;text-decoration:none;display:block}
+.ai-banner-title{font-size:22px;font-weight:700;letter-spacing:.3px}
+.ai-banner-sub{font-size:14px;color:rgba(255,255,255,.92);margin-top:4px}
+.ai-banner:hover{background:var(--wm-blue-hover)}
+
+/* Fallback Start */
+.fallback-cta{
+  position:fixed; right:14px; bottom:14px; z-index:5;
+  display:inline-block; padding:10px 14px; border-radius:999px;
+  background:var(--wm-blue); color:#fff; font-weight:700; font-size:14px;
+  text-decoration:none; border:1px solid rgba(0,0,0,.05);
+  box-shadow:0 6px 18px rgba(0,0,0,.16);
+  opacity:0; animation:fadeIn 600ms ease-out 200ms forwards;
+}
+.fallback-cta:hover{background:var(--wm-blue-hover)}
+
+/* Mobile tuning */
+@media (max-width:960px){
+  .ai-banner{ top:var(--banner-top-mobile); }
+  .ai-banner-title{ font-size:19px; }
+  .ai-banner-sub{ font-size:13px; }
 }
 
-/* Blue banner */
-.ai-banner {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  top: var(--banner-top-desktop);
-  background: var(--wm-blue);
-  text-align: center;
-  padding: 12px 0 14px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  z-index: 2;
-  opacity: 0;
-  animation: fadeIn 500ms ease-out forwards;
-}
-.ai-link {
-  color: #fff;
-  text-decoration: none;
-  display: block;
-}
-.ai-banner-title {
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: 0.3px;
-}
-.ai-banner-sub {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.92);
-  margin-top: 4px;
-}
-.ai-banner:hover { background: var(--wm-blue-hover); }
-
-/* Fixed fallback Start button */
-.fallback-cta {
-  position: fixed;
-  right: 14px;
-  bottom: 14px;
-  z-index: 5;
-  display: inline-block;
-  padding: 10px 14px;
-  border-radius: 999px;
-  background: var(--wm-blue);
-  color: #fff;
-  font-weight: 700;
-  font-size: 14px;
-  text-decoration: none;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
-  opacity: 0;
-  animation: fadeIn 600ms ease-out 200ms forwards;
-}
-.fallback-cta:hover { background: var(--wm-blue-hover); }
-
-/* ───────────────────────────────────────────
-   MOBILE TUNING
-   ─────────────────────────────────────────── */
-@media (max-width: 960px) {
-  :root {
-    --phone-scale: 0.86;        /* global shrink */
-  }
-  .ai-banner { top: var(--banner-top-mobile); }
-  .ai-banner-title { font-size: 19px; }
-  .ai-banner-sub { font-size: 13px; }
-}
-
-/* Version tag */
-.ver {
-  position: fixed;
-  right: 8px;
-  bottom: 6px;
-  font: 12px/1 monospace;
-  color: #888;
-  opacity: 0.6;
+/* Version */
+.ver{
+  position:fixed; right:8px; bottom:6px;
+  font:12px/1 monospace; color:#888; opacity:.6;
 }
