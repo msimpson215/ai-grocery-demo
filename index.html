@@ -4,25 +4,25 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Walmart — AI Grocery Assistant (Demo)</title>
-  <link rel="stylesheet" href="style.css?v=final-1106" />
+  <link rel="stylesheet" href="style.css?v=final-phoneswap" />
 </head>
 <body>
   <main class="stage">
-    <!-- All visual content lives inside this frame -->
+    <!-- The whole visual lives inside the frame (no scaling tricks) -->
     <div class="frame">
-      <!-- Walmart screenshot -->
-      <img class="mock" src="walmart_mock_.png?v=final-1106"
-           alt="Walmart grocery page mock" />
+      <!-- Use a mobile-specific screenshot on phones so the Walmart header/logo is visible -->
+      <picture>
+        <source srcset="walmart_mock_mobile.png?v=final-phoneswap" media="(max-width: 960px)" />
+        <img class="mock" src="walmart_mock_.png?v=final-phoneswap" alt="Walmart grocery page mock" />
+      </picture>
 
-      <!-- Blue banner -->
+      <!-- Brand-first banner (says Walmart explicitly, since your PNG might not) -->
       <section class="ai-banner">
         <a class="ai-link"
            href="https://walmart-business-example.onrender.com/?src=wm-link"
            target="_blank" rel="noopener">
-          <div class="ai-banner-title">AI Grocery Assistant</div>
-          <div class="ai-banner-sub">
-            Let our AI Assistant assist you with your grocery shopping
-          </div>
+          <div class="ai-banner-title">Walmart — AI Grocery Assistant</div>
+          <div class="ai-banner-sub">Let our AI Assistant assist you with your grocery shopping</div>
         </a>
       </section>
     </div>
@@ -36,7 +36,6 @@
     </a>
   </main>
 
-  <!-- Version tag -->
-  <div class="ver">final-1106</div>
+  <div class="ver">final-phoneswap</div>
 </body>
 </html>
