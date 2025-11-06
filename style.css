@@ -1,238 +1,137 @@
-/* ==========================================================================
-   Walmart — AI Grocery Assistant (Static Demo)
-   One-file stylesheet: desktop base + mobile overrides
-   --------------------------------------------------------------------------
-   Notes:
-   - Uses the desktop screenshot as page background.
-   - Banner stays fixed at top; Start button is fixed bottom center.
-   - Mobile view fills the screen (no black bars), prevents over-zoom.
-   - Safe fallbacks for common class/ID names are included.
-   ========================================================================== */
+/* ===============================
+   Walmart — AI Grocery Assistant
+   =============================== */
 
-/* -- CSS RESET (lightweight) --------------------------------------------- */
-*,
-*::before,
-*::after { box-sizing: border-box; }
+/* Reset & base */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
 
-html, body {
-  margin: 0;
-  padding: 0;
-}
-
-img, svg, video, canvas {
-  display: block;
-  max-width: 100%;
-}
-
-/* -- THEME TOKENS --------------------------------------------------------- */
 :root{
-  --wm-blue: #0071dc;        /* Walmart brand blue */
-  --wm-blue-dark: #004f9a;   /* Accessible hover state */
-  --wm-yellow: #ffc220;
-  --bg-overlay: rgba(255,255,255,0.92);
-  --text: #0b0b0b;
-  --radius: 16px;
-  --shadow: 0 8px 24px rgba(0,0,0,0.18);
+  /* Lower value pulls the image upward (shows more blue header in mock) */
+  --mock-y: 6%;
+  --brand-blue: #0071dc;
+  --spark: #ffd100;
+  --surface: #ffffff;
+  --bg: #e9ecef;
+  --shadow-strong: 0 24px 60px rgba(0,0,0,.35);
+  --shadow-soft:   0 12px 32px rgba(0,113,220,.34);
 }
-
-/* -- PAGE BACKGROUND ------------------------------------------------------ */
-/* We draw the Walmart screenshot as the page background.
-   If your HTML uses an <img> instead, keep it; this background is enough
-   for the static mock. */
-html, body { height: 100%; }
 
 body{
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-  color: var(--text);
-  line-height: 1.35;
-
-  /* Desktop: fill and center the screenshot */
-  background-image: url('walmart_mock_.png');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center top;
-
-  /* Prevent odd scroll gaps on mobile; we also set in media query */
-  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  font: 16px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  color: #111;
+  background: var(--bg);
 }
 
-/* -- ACCESSIBILITY HELPERS ------------------------------------------------ */
-.sr-only {
-  position: absolute !important;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0,0,0,0);
-  white-space: nowrap; border: 0;
+/* Background mock */
+.bg{
+  position: fixed; inset: 0; z-index: 1; overflow: hidden; background: var(--bg);
+}
+.bg > picture, .bg > img{ display:block; width:100vw; height:100svh; }
+#mock{
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center var(--mock-y);
+  transition: transform .25s ease, object-position .25s ease;
 }
 
-/* -- BANNER (top) --------------------------------------------------------- */
-/* Use any of these selectors based on your HTML */
-#wm-banner, .banner, header.banner {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-
-  padding: 12px 16px;
-  background: var(--bg-overlay);
-  backdrop-filter: saturate(180%) blur(6px);
-  border-bottom: 1px solid rgba(0,0,0,0.06);
-  z-index: 40;
-
-  color: var(--wm-blue);
-  font-weight: 700;
-  font-size: 20px;
-  letter-spacing: 0.2px;
+/* Walmart header launcher */
+.wm-bar{
+  position: fixed; top: 0; left: 0; right: 0; z-index: 3;
+  display: flex; align-items: center; gap: 14px;
+  padding: max(16px, env(safe-area-inset-top)) 16px 16px;
+  background: var(--brand-blue); color: #fff;
+  border-radius: 0 0 18px 18px;
+  box-shadow: var(--shadow-soft);
+  cursor: pointer; user-select: none;
 }
-
-/* Optional subtitle inside banner */
-#wm-banner small,
-.banner small,
-header.banner small{
-  display: block;
-  margin-top: 4px;
-  color: #333;
-  font-weight: 500;
-  font-size: 12px;
+.wm-brand{ display:flex; align-items:center; gap:8px; }
+.spark{
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--spark); flex: 0 0 18px;
+  box-shadow: 0 0 0 2px rgba(255,255,255,.65) inset;
 }
-
-/* -- CTA WRAPPER (centered text over image, optional) -------------------- */
-.overlay, .content, .centered, .cta {
-  position: fixed;
-  inset: 20vh 0 auto 0;      /* roughly 20% down the screen */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  z-index: 45;
-  padding: 0 16px;
-  pointer-events: none;       /* clicks go through, except on button */
+.wm-word{ font-weight: 900; letter-spacing: .2px; }
+.wm-title{
+  font-weight: 900; letter-spacing: .2px;
+  font-size: clamp(18px,5vw,22px); line-height: 1.1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+.spacer{ flex:1; }
 
-.overlay .card,
-.content .card,
-.centered .card,
-.cta .card {
-  background: rgba(255,255,255,0.85);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 16px 18px;
-  pointer-events: auto;
-}
-
-/* -- START BUTTON (bottom-center) ---------------------------------------- */
-#start, .start-btn, a.start, .cta .button, .cta button {
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 24px;
-
-  width: min(560px, 88vw);
-  padding: 14px 18px;
-
-  background: var(--wm-blue);
-  color: #fff;
-  border: 0;
-  border-radius: 14px;
-  font-weight: 700;
-  font-size: 18px;
-  text-decoration: none;
-  text-align: center;
-  box-shadow: var(--shadow);
+/* Floating launcher pill (mobile only) */
+.launcher{
+  display: none;                   /* hidden on desktop */
+  position: fixed; z-index: 3; right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  align-items: center; gap: 8px;
+  padding: 10px 12px; border-radius: 999px;
+  background: var(--brand-blue); color:#fff; font-weight: 800;
+  box-shadow: 0 12px 28px rgba(0,113,220,.35);
   cursor: pointer;
-
-  z-index: 50;
-  transition: background 160ms ease;
+}
+.halo{
+  width: 14px; height: 14px; border-radius: 50%;
+  background: #fff; opacity: .95; position: relative;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100%{ box-shadow: 0 0 0 0 rgba(255,255,255,.55); }
+  50%    { box-shadow: 0 0 0 10px rgba(255,255,255,0); }
 }
 
-#start:hover,
-.start-btn:hover,
-a.start:hover,
-.cta .button:hover,
-.cta button:hover {
-  background: var(--wm-blue-dark);
+/* Overlay */
+.overlay{
+  position: fixed; inset: 0; z-index: 10; display: none;
+  background: rgba(0,0,0,.35);
+  backdrop-filter: saturate(110%) blur(4px);
+}
+.panel{
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+  width: min(720px, 92vw); height: min(80vh, 760px);
+  background: var(--surface); border-radius: 18px; overflow: hidden;
+  box-shadow: var(--shadow-strong);
+  display: flex; flex-direction: column;
+}
+.panel-header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 10px 12px; background: var(--brand-blue); color: #fff; font-weight: 900;
+}
+.panel-title{ display:flex; align-items:center; gap:10px; }
+.panel-title .spark{ width:16px; height:16px; }
+.close{
+  background: transparent; color: #fff; border: 0; font-size: 20px;
+  line-height: 1; cursor: pointer; padding: 6px 10px;
+}
+.panel-body{ flex: 1; position: relative; background: #f7f7f7; }
+iframe{
+  position:absolute; inset:0; width:100%; height:100%;
+  border:0; background:#fff;
 }
 
-/* -- LINKS INSIDE OVERLAYS (optional) ------------------------------------ */
-.overlay a, .content a, .centered a, .cta a {
-  color: var(--wm-blue-dark);
-  text-decoration: underline;
+/* Fallback */
+.fallback{
+  position:absolute; inset:0; display:none;
+  align-items:center; justify-content:center; text-align:center; padding:24px;
+}
+.fallback > div{ max-width:520px; }
+.fallback a{
+  display:inline-block; margin-top:12px; padding:12px 16px;
+  background: var(--brand-blue); color:#fff; border-radius:12px; text-decoration:none; font-weight:900;
 }
 
-/* -- RESPONSIVE: MOBILE TUNE --------------------------------------------- */
-@media (max-width: 768px) {
-  /* Fill phone view cleanly, no black bars */
-  html, body { height: 100%; }
-  body {
-    background-repeat: no-repeat !important;
-    background-size: cover !important;
-    background-position: center top !important;
-    background-attachment: scroll !important;
-
-    /* modern viewport unit avoids URL-bar jump */
-    min-height: 100svh;
-    overflow: hidden; /* prevent double-scroll */
-  }
-
-  /* If you also have an <img> mock in HTML, keep it covering */
-  .mock, .mock-image, img#mock, img.mock, .hero img, .background img {
-    width: 100vw !important;
-    height: 100svh !important;
-    object-fit: cover !important;
-    object-position: center top !important;
-    display: block;
-  }
-
-  /* Banner readability & sizing */
-  #wm-banner, .banner, header.banner {
-    padding: max(8px, env(safe-area-inset-top)) 12px 8px;
-    font-size: clamp(16px, 3.8vw, 22px);
-    line-height: 1.15;
-  }
-
-  /* Keep Start button thumb-friendly and above safe area */
-  #start, .start-btn, a.start, .cta .button, .cta button {
-    bottom: max(16px, env(safe-area-inset-bottom));
-    width: min(560px, 88vw);
-    padding: 14px 18px;
-    font-size: clamp(16px, 4.2vw, 20px);
-    border-radius: 14px;
-  }
-
-  /* Keep any center text above the button */
-  .overlay, .content, .centered, .cta {
-    position: fixed;
-    inset: auto 0 max(80px, 14vh) 0;
-    padding: 0 16px;
-    pointer-events: none;
-  }
+/* Mobile tune */
+@media (max-width:768px){
+  :root{ --mock-y: 3%; } /* show a touch more blue on small screens */
+  #mock{ transform: scale(0.88); transform-origin: top center; }
+  .wm-bar{ padding: max(18px, env(safe-area-inset-top)) 16px 18px; }
+  .wm-title{ font-size: clamp(18px,5.6vw,22px); }
+  .panel{ width:100vw; height:100svh; left:0; top:0; transform:none; border-radius:0; }
+  .launcher{ display:flex; } /* visible on phones */
 }
 
-/* Very small phones */
-@media (max-width: 400px) {
-  #wm-banner, .banner, header.banner {
-    font-size: clamp(15px, 4.4vw, 18px);
-  }
-  #start, .start-btn, a.start, .cta .button, .cta button {
-    font-size: clamp(15px, 4.8vw, 18px);
-  }
+@media (max-width:380px){
+  #mock{ transform: scale(0.84); }
 }
-
-/* Landscape phones: give a bit more room at the bottom */
-@media (max-height: 480px) and (orientation: landscape) {
-  #start, .start-btn, a.start, .cta .button, .cta button {
-    bottom: max(8px, env(safe-area-inset-bottom));
-    padding: 12px 16px;
-  }
-}
-
-/* -- OPTIONAL: Swap to a dedicated mobile screenshot --------------------- */
-/* If you later add 'walmart_mock_mobile.png' (cropped with logo/search),
-   uncomment the block below to auto-swap on phones.
-
-@media (max-width: 768px) {
-  body { background-image: url('walmart_mock_mobile.png') !important; }
-}
-*/
