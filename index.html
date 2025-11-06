@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Walmart — AI Grocery Assistant</title>
+  <title>Walmart — AI Grocery Assistant (Embed)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <style>
+    /* Reset & base */
     *,*::before,*::after{box-sizing:border-box}
     html,body{margin:0;height:100%}
     body{
@@ -12,49 +13,206 @@
       font:16px system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
       color:#111; background:#f6f7f8;
     }
-    .bg{position:fixed; inset:0; z-index:1; overflow:hidden}
-    .bg>img{width:100vw; height:100svh; object-fit:cover; object-position:center top; display:block; background:#e9ecef}
 
+    /* Background mock (desktop + mobile auto) */
+    .bg{position:fixed; inset:0; z-index:1; overflow:hidden; background:#e9ecef;}
+    .bg>picture,.bg>img{display:block; width:100vw; height:100svh;}
+    #mock{
+      width:100%; height:100%;
+      object-fit:cover; object-position:center top;
+      transition:transform .25s ease, object-position .25s ease;
+    }
+
+    /* Walmart header launcher (click to open overlay) */
     .wm-bar{
       position:fixed; top:0; left:0; right:0; z-index:3;
-      display:flex; align-items:center; gap:12px;
-      padding:max(10px, env(safe-area-inset-top)) 14px 10px;
-      background:#0071dc; color:#fff; text-decoration:none;
-      border-radius:0 0 16px 16px; box-shadow:0 10px 28px rgba(0,113,220,.35);
+      display:flex; align-items:center; gap:14px;
+      padding:max(16px, env(safe-area-inset-top)) 16px 16px;
+      background:#0071dc; color:#fff;
+      border-radius:0 0 18px 18px; box-shadow:0 12px 32px rgba(0,113,220,.34);
+      cursor:pointer; user-select:none;
     }
-    .wm-bar:hover{filter:brightness(.98)}
-    .wm-logo{height:28px; width:auto; border-radius:8px}
-    .wm-title{font-weight:900; letter-spacing:.2px; white-space:nowrap; font-size:clamp(16px,4.2vw,20px)}
+    /* Text logo (no image needed) */
+    .wm-brand{display:flex; align-items:center; gap:8px}
+    .spark{
+      width:18px; height:18px; border-radius:50%;
+      background:#ffd100; flex:0 0 18px;
+      box-shadow:0 0 0 2px rgba(255,255,255,.65) inset;
+    }
+    .wm-word{font-weight:900; letter-spacing:.2px}
+    .wm-title{
+      font-weight:900; letter-spacing:.2px;
+      font-size:clamp(18px,5vw,22px); line-height:1.1;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
     .spacer{flex:1}
 
-    /* Angled ribbon */
-    .ribbon{
-      position:fixed; z-index:4;
-      top:12px; right:-36px;
-      width:160px; text-align:center;
-      background:#ff7a00; color:#fff; font-weight:900; letter-spacing:.4px;
-      padding:6px 0;
-      transform:rotate(45deg);
-      box-shadow:0 6px 14px rgba(0,0,0,.18);
-      pointer-events:none; /* make sure clicks go to the header link */
+    /* Floating launcher pill (alternate opener) */
+    .launcher{
+      position:fixed; z-index:3; right:16px;
+      bottom:calc(16px + env(safe-area-inset-bottom));
+      display:flex; align-items:center; gap:8px;
+      padding:10px 12px; border-radius:999px;
+      background:#0071dc; color:#fff; font-weight:800;
+      box-shadow:0 12px 28px rgba(0,113,220,.35);
+      cursor:pointer;
     }
+    .halo{
+      width:14px; height:14px; border-radius:50%;
+      background:#fff; opacity:.95; position:relative;
+      animation:pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.55)}
+      50%{box-shadow:0 0 0 10px rgba(255,255,255,0)}
+    }
+
+    /* Overlay */
+    .overlay{
+      position:fixed; inset:0; z-index:10; display:none;
+      background:rgba(0,0,0,.35); backdrop-filter:saturate(110%) blur(4px);
+    }
+    .panel{
+      position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+      width:min(720px,92vw); height:min(80vh,760px);
+      background:#fff; border-radius:18px; overflow:hidden;
+      box-shadow:0 24px 60px rgba(0,0,0,.35);
+      display:flex; flex-direction:column;
+    }
+    .panel-header{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:10px 12px; background:#0071dc; color:#fff; font-weight:900;
+    }
+    .panel-title{display:flex; align-items:center; gap:10px}
+    .panel-title .spark{width:16px; height:16px}
+    .close{
+      background:transparent; color:#fff; border:0; font-size:20px;
+      line-height:1; cursor:pointer; padding:6px 10px;
+    }
+    .panel-body{flex:1; position:relative; background:#f7f7f7}
+    iframe{
+      position:absolute; inset:0; width:100%; height:100%;
+      border:0; background:#fff;
+    }
+
+    /* Fallback if embedding blocked */
+    .fallback{
+      position:absolute; inset:0; display:none;
+      align-items:center; justify-content:center; text-align:center; padding:24px;
+    }
+    .fallback > div{max-width:520px}
+    .fallback a{
+      display:inline-block; margin-top:12px; padding:12px 16px;
+      background:#0071dc; color:#fff; border-radius:12px; text-decoration:none; font-weight:900;
+    }
+
+    /* Helper hint (optional) */
     .helper{
-      position:fixed; top:calc(50px + env(safe-area-inset-top));
+      position:fixed; top:calc(66px + env(safe-area-inset-top));
       left:0; right:0; z-index:2; text-align:center; font-size:12px;
       color:#1b1b1b; text-shadow:0 1px 0 rgba(255,255,255,.8); pointer-events:none;
     }
+
+    /* Mobile tune */
+    @media (max-width:768px){
+      #mock{
+        transform:scale(0.86); transform-origin:top center;
+        object-position:center 8%;
+      }
+      .wm-bar{padding:max(18px, env(safe-area-inset-top)) 16px 18px;}
+      .wm-title{font-size:clamp(18px,5.6vw,22px)}
+      .panel{width:100vw; height:100svh; left:0; top:0; transform:none; border-radius:0;}
+      .helper{top:calc(72px + env(safe-area-inset-top));}
+    }
+    @media (max-width:380px){ #mock{transform:scale(0.82)} }
   </style>
 </head>
 <body>
-  <div class="bg"><img src="walmart_mock_.png?v=13" alt=""></div>
+  <!-- Background Walmart mock -->
+  <div class="bg">
+    <picture>
+      <source srcset="walmart_mock_mobile.png?v=1" media="(max-width:768px)">
+      <img id="mock" src="walmart_mock_.png?v=16" alt="">
+    </picture>
+  </div>
 
-  <a class="wm-bar" href="https://walmart-business-example.onrender.com/?src=wm-header-B" target="_blank" rel="noopener">
-    <img class="wm-logo" src="walmart_logo_blue.png" alt="Walmart logo">
-    <div class="wm-title">Walmart — AI Grocery Assistant</div>
+  <!-- Walmart header launcher (stays on page; opens overlay) -->
+  <div class="wm-bar" id="wmLaunch" role="button" aria-label="Open Walmart AI Assistant">
+    <div class="wm-brand">
+      <div class="spark" aria-hidden="true"></div>
+      <div class="wm-word" aria-hidden="true">Walmart</div>
+    </div>
+    <div class="wm-title">— AI Grocery Assistant</div>
     <div class="spacer"></div>
-  </a>
+  </div>
 
-  <div class="ribbon">NEW</div>
-  <div class="helper" aria-hidden="true">Opens in a new tab</div>
+  <!-- Optional hint -->
+  <div class="helper" aria-hidden="true">Tap the blue bar or the dot to open the assistant. It stays on this page.</div>
+
+  <!-- Floating launcher pill -->
+  <div class="launcher" id="dotLaunch" aria-label="Open Walmart AI">
+    <div class="halo"></div><div>Walmart&nbsp;AI</div>
+  </div>
+
+  <!-- Overlay with iframe -->
+  <div class="overlay" id="overlay" aria-hidden="true">
+    <div class="panel" role="dialog" aria-modal="true" aria-label="Walmart AI Assistant">
+      <div class="panel-header">
+        <div class="panel-title"><div class="spark"></div><div>Walmart — AI Grocery Assistant</div></div>
+        <button class="close" id="closeBtn" aria-label="Close">×</button>
+      </div>
+      <div class="panel-body">
+        <iframe id="voxFrame"
+          src="https://walmart-business-example.onrender.com/?src=wm-embed"
+          allow="microphone; autoplay; clipboard-read; clipboard-write"
+          referrerpolicy="no-referrer"
+        ></iframe>
+
+        <!-- Fallback if iframe won't load due to X-Frame-Options/CSP -->
+        <div class="fallback" id="fallback">
+          <div>
+            <h3>Open Walmart AI in a new tab</h3>
+            <p>If the assistant doesn’t appear here, your browser blocked embedding. You can still use it in a separate tab.</p>
+            <a href="https://walmart-business-example.onrender.com/?src=wm-newtab" target="_blank" rel="noopener">Open Walmart AI</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const overlay   = document.getElementById('overlay');
+    const wmLaunch  = document.getElementById('wmLaunch');
+    const dotLaunch = document.getElementById('dotLaunch');
+    const closeBtn  = document.getElementById('closeBtn');
+    const voxFrame  = document.getElementById('voxFrame');
+    const fallback  = document.getElementById('fallback');
+
+    function openOverlay(){
+      overlay.style.display='block';
+      overlay.setAttribute('aria-hidden','false');
+
+      // Graceful fallback if embed is blocked
+      fallback.style.display='none';
+      const check = setTimeout(()=>{ fallback.style.display='flex'; }, 2200);
+      voxFrame.addEventListener('load', ()=>{ clearTimeout(check); }, { once:true });
+    }
+
+    function closeOverlay(){
+      overlay.style.display='none';
+      overlay.setAttribute('aria-hidden','true');
+      // Optional hard reset to stop audio/session:
+      // voxFrame.src = voxFrame.src;
+    }
+
+    wmLaunch.addEventListener('click', openOverlay);
+    dotLaunch.addEventListener('click', openOverlay);
+    closeBtn.addEventListener('click', closeOverlay);
+
+    // Click outside panel to close
+    overlay.addEventListener('click', (e)=>{ if(e.target === overlay) closeOverlay(); });
+    // ESC to close
+    document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeOverlay(); });
+  </script>
 </body>
 </html>
