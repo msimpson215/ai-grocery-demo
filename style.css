@@ -1,137 +1,98 @@
 /* ===============================
    Walmart — AI Grocery Assistant
+   STATIC MOCK (no JS, no iframe)
    =============================== */
 
 /* Reset & base */
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; }
-
 :root{
-  /* Lower value pulls the image upward (shows more blue header in mock) */
-  --mock-y: 6%;
-  --brand-blue: #0071dc;
-  --spark: #ffd100;
-  --surface: #ffffff;
-  --bg: #e9ecef;
-  --shadow-strong: 0 24px 60px rgba(0,0,0,.35);
-  --shadow-soft:   0 12px 32px rgba(0,113,220,.34);
+  --brand-blue: #0071dc;   /* Walmart primary */
+  --spark: #ffd100;        /* Spark yellow */
+  --bg: #e9ecef;           /* page bg behind mock */
+  --hero-h: 112px;         /* height of the big blue bar (adjust as needed) */
+  --center-offset-top: 64px; /* nudges title lower to sit above the search bar area in the mock */
 }
 
 body{
   min-height: 100svh;
-  overflow: hidden;
+  overflow: hidden;                 /* we’re a single-screen mock */
   font: 16px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
   color: #111;
   background: var(--bg);
 }
 
-/* Background mock */
-.bg{
-  position: fixed; inset: 0; z-index: 1; overflow: hidden; background: var(--bg);
-}
-.bg > picture, .bg > img{ display:block; width:100vw; height:100svh; }
+/* Background screenshot */
+.bg{ position: fixed; inset: 0; z-index: 1; overflow: hidden; background: var(--bg); }
+.bg > picture, .bg > img { display: block; width: 100vw; height: 100svh; }
 #mock{
   width: 100%; height: 100%;
   object-fit: cover;
-  object-position: center var(--mock-y);
-  transition: transform .25s ease, object-position .25s ease;
+  object-position: center top; /* leave image natural; the hero overlays it */
 }
 
-/* Walmart header launcher */
-.wm-bar{
-  position: fixed; top: 0; left: 0; right: 0; z-index: 3;
-  display: flex; align-items: center; gap: 14px;
-  padding: max(16px, env(safe-area-inset-top)) 16px 16px;
-  background: var(--brand-blue); color: #fff;
+/* Big solid blue header that covers the top junk */
+.hero{
+  position: fixed; z-index: 3; inset: 0 0 auto 0;
+  height: var(--hero-h);
+  background: var(--brand-blue);
+  color: #fff;
   border-radius: 0 0 18px 18px;
-  box-shadow: var(--shadow-soft);
-  cursor: pointer; user-select: none;
+  box-shadow: 0 12px 32px rgba(0,113,220,.34);
+  display: grid;
+  place-items: center;
+  /* this solid bar hides any white/blue artifacts from the mock underneath */
 }
-.wm-brand{ display:flex; align-items:center; gap:8px; }
+
+.hero-inner{
+  width: min(1200px, 96vw);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: max(16px, env(safe-area-inset-top)) 16px 16px;
+}
+
+/* Left: Walmart wordmark (text + spark dot) */
+.brand{ display: inline-flex; align-items: center; gap: 10px; justify-self: start; }
 .spark{
-  width: 18px; height: 18px; border-radius: 50%;
-  background: var(--spark); flex: 0 0 18px;
-  box-shadow: 0 0 0 2px rgba(255,255,255,.65) inset;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--spark);
+  box-shadow: 0 0 0 2px rgba(255,255,255,.7) inset;
 }
-.wm-word{ font-weight: 900; letter-spacing: .2px; }
-.wm-title{
-  font-weight: 900; letter-spacing: .2px;
-  font-size: clamp(18px,5vw,22px); line-height: 1.1;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.spacer{ flex:1; }
-
-/* Floating launcher pill (mobile only) */
-.launcher{
-  display: none;                   /* hidden on desktop */
-  position: fixed; z-index: 3; right: 16px;
-  bottom: calc(16px + env(safe-area-inset-bottom));
-  align-items: center; gap: 8px;
-  padding: 10px 12px; border-radius: 999px;
-  background: var(--brand-blue); color:#fff; font-weight: 800;
-  box-shadow: 0 12px 28px rgba(0,113,220,.35);
-  cursor: pointer;
-}
-.halo{
-  width: 14px; height: 14px; border-radius: 50%;
-  background: #fff; opacity: .95; position: relative;
-  animation: pulse 1.6s ease-in-out infinite;
-}
-@keyframes pulse {
-  0%,100%{ box-shadow: 0 0 0 0 rgba(255,255,255,.55); }
-  50%    { box-shadow: 0 0 0 10px rgba(255,255,255,0); }
+.wm-word{
+  font-weight: 900; letter-spacing: .2px; font-size: clamp(18px, 3.6vw, 22px);
 }
 
-/* Overlay */
-.overlay{
-  position: fixed; inset: 0; z-index: 10; display: none;
-  background: rgba(0,0,0,.35);
-  backdrop-filter: saturate(110%) blur(4px);
+/* Center: Title aligned visually above the search bar area in the mock */
+.title{
+  display: inline-flex; align-items: center; gap: 10px;
+  font-weight: 900;
+  letter-spacing: .2px;
+  font-size: clamp(20px, 4.2vw, 26px);
+  transform: translateY(var(--center-offset-top)); /* pushes the label lower */
+  text-align: center;
 }
-.panel{
-  position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
-  width: min(720px, 92vw); height: min(80vh, 760px);
-  background: var(--surface); border-radius: 18px; overflow: hidden;
-  box-shadow: var(--shadow-strong);
-  display: flex; flex-direction: column;
-}
-.panel-header{
-  display:flex; align-items:center; justify-content:space-between;
-  padding: 10px 12px; background: var(--brand-blue); color: #fff; font-weight: 900;
-}
-.panel-title{ display:flex; align-items:center; gap:10px; }
-.panel-title .spark{ width:16px; height:16px; }
-.close{
-  background: transparent; color: #fff; border: 0; font-size: 20px;
-  line-height: 1; cursor: pointer; padding: 6px 10px;
-}
-.panel-body{ flex: 1; position: relative; background: #f7f7f7; }
-iframe{
-  position:absolute; inset:0; width:100%; height:100%;
-  border:0; background:#fff;
+.person{ width: 22px; height: 22px; color: #fff; }
+
+/* Right: empty for now */
+.right-slot{ justify-self: end; min-width: 40px; }
+
+/* Mobile tweaks */
+@media (max-width: 768px){
+  :root{
+    --hero-h: 128px;            /* a little taller on phones */
+    --center-offset-top: 52px;  /* adjust so it still sits above the search bar area */
+  }
+  .wm-word{ font-size: clamp(18px, 5vw, 20px); }
+  .title{ font-size: clamp(20px, 6vw, 24px); }
 }
 
-/* Fallback */
-.fallback{
-  position:absolute; inset:0; display:none;
-  align-items:center; justify-content:center; text-align:center; padding:24px;
-}
-.fallback > div{ max-width:520px; }
-.fallback a{
-  display:inline-block; margin-top:12px; padding:12px 16px;
-  background: var(--brand-blue); color:#fff; border-radius:12px; text-decoration:none; font-weight:900;
+/* Ultra-small screens */
+@media (max-width: 380px){
+  :root{ --center-offset-top: 48px; }
 }
 
-/* Mobile tune */
-@media (max-width:768px){
-  :root{ --mock-y: 3%; } /* show a touch more blue on small screens */
-  #mock{ transform: scale(0.88); transform-origin: top center; }
-  .wm-bar{ padding: max(18px, env(safe-area-inset-top)) 16px 18px; }
-  .wm-title{ font-size: clamp(18px,5.6vw,22px); }
-  .panel{ width:100vw; height:100svh; left:0; top:0; transform:none; border-radius:0; }
-  .launcher{ display:flex; } /* visible on phones */
-}
-
-@media (max-width:380px){
-  #mock{ transform: scale(0.84); }
+/* Accessibility: prefer reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *{ transition: none !important; animation: none !important; }
 }
