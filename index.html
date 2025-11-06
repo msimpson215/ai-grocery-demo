@@ -4,7 +4,6 @@
 <meta charset="utf-8" />
 <title>Walmart — AI Grocery Assistant (Inline VoxTalk)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="color-scheme" content="light" />
 <style>
 :root{
   --wm-blue:#0071ce;
@@ -16,81 +15,82 @@
 /* reset */
 *,*::before,*::after{box-sizing:border-box}
 html,body{margin:0;height:100%}
-body{
-  min-height:100svh; overflow:hidden;
-  font:16px system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-  background:#e9ecef; color:#111;
-}
+body{min-height:100svh;overflow:hidden;font:16px system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#e9ecef}
 
-/* background Walmart screenshot (hard fallback color in case image fails) */
-.bg{position:fixed; inset:0; z-index:1; overflow:hidden; background:#e9ecef;}
-.bg>picture,.bg>img{display:block; width:100vw; height:100svh}
-#mock{width:100%; height:100%; object-fit:cover; object-position:center top}
+/* background Walmart mock */
+.bg{position:fixed;inset:0;z-index:1;overflow:hidden;background:#e9ecef}
+.bg>picture,.bg>img{display:block;width:100vw;height:100svh}
+#mock{width:100%;height:100%;object-fit:cover;object-position:center top}
 
-/* slim label bar so users know what the iframe is */
+/* header label */
 .header{
-  position:fixed; left:0; right:0; top:0; z-index:2;
-  height:56px; background:var(--wm-blue); color:#fff;
-  display:flex; align-items:center; gap:10px; padding:0 14px;
-  box-shadow:0 6px 18px rgba(0,0,0,.2); border-radius:0 0 12px 12px;
-  font-weight:900; letter-spacing:.25px;
+  position:fixed;left:0;right:0;top:0;z-index:5;height:60px;
+  background:var(--wm-blue);color:#fff;
+  display:flex;align-items:center;gap:10px;padding:0 16px;
+  font-weight:900;letter-spacing:.25px;box-shadow:0 6px 20px rgba(0,0,0,.18)
 }
-.header .spark{width:16px; height:16px; border-radius:50%; background:var(--spark); box-shadow:0 0 0 2px rgba(255,255,255,.65) inset}
+.header .spark{width:18px;height:18px;border-radius:50%;background:var(--spark);box-shadow:0 0 0 2px rgba(255,255,255,.65) inset}
 
-/* VoxTalk iframe panel (visible immediately) */
+/* button */
+.launch{
+  position:fixed;top:14px;left:14px;z-index:9999;width:50px;height:50px;
+  border-radius:50%;border:3px solid #fff;background:var(--wm-blue);
+  box-shadow:0 8px 20px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:transform .15s ease
+}
+.launch:hover{transform:scale(1.06)}
+.launch .dot{width:16px;height:16px;border-radius:50%;background:var(--spark);box-shadow:0 0 0 2px rgba(255,255,255,.7) inset}
+.launch.spin{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* chat panel */
 .panel{
-  position:fixed; right:16px; bottom:16px; z-index:3;
-  width:min(var(--panel-w),94vw); height:min(var(--panel-h),84vh);
-  background:#fff; border-radius:14px; overflow:hidden;
-  box-shadow:0 18px 48px rgba(0,0,0,.35); display:flex; flex-direction:column;
+  position:fixed;right:16px;bottom:16px;z-index:9998;
+  width:min(var(--panel-w),95vw);height:min(var(--panel-h),85vh);
+  background:#fff;border-radius:14px;overflow:hidden;
+  box-shadow:0 20px 50px rgba(0,0,0,.4);
+  display:flex;flex-direction:column
 }
+.panel.hidden{display:none}
 .panel-head{
-  background:var(--wm-blue); color:#fff; padding:8px 12px; font-weight:900; display:flex; align-items:center; gap:8px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--wm-blue);color:#fff;font-weight:900;padding:8px 12px
 }
-.panel-head .spark{width:12px; height:12px; border-radius:50%; background:var(--spark)}
-.panel-body{flex:1; position:relative; background:#fff}
-iframe{position:absolute; inset:0; width:100%; height:100%; border:0; background:#fff}
+.panel-title{display:flex;align-items:center;gap:8px}
+.panel-title .spark{width:12px;height:12px;border-radius:50%;background:var(--spark)}
+.close{background:transparent;color:#fff;border:0;font-size:22px;cursor:pointer;padding:4px 10px}
+.panel-body{flex:1;position:relative;background:#fff}
+iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff}
 
-/* fallback notice if iframe is blocked */
-.fallback{position:absolute; inset:0; display:none; align-items:center; justify-content:center; padding:20px; text-align:center}
-.fallback a{display:inline-block; margin-top:12px; padding:10px 14px; background:var(--wm-blue); color:#fff; border-radius:10px; text-decoration:none; font-weight:900}
-
-/* mobile */
-@media (max-width:520px){
-  :root{ --panel-w:380px; --panel-h:72vh }
-}
-@media (max-width:380px){
-  :root{ --panel-w:340px; --panel-h:70vh }
-}
+/* fallback */
+.fallback{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:20px}
+.fallback a{display:inline-block;margin-top:10px;padding:10px 14px;background:var(--wm-blue);color:#fff;border-radius:10px;text-decoration:none;font-weight:900}
 </style>
 </head>
 <body>
 
-<!-- Walmart screenshot -->
 <div class="bg">
   <picture>
-    <source srcset="./walmart_mock_mobile.png?v=3" media="(max-width:768px)">
-    <img id="mock" src="./walmart_mock_.png?v=25" alt="Walmart search results mock">
+    <source srcset="./walmart_mock_mobile.png?v=1" media="(max-width:768px)">
+    <img id="mock" src="./walmart_mock_.png?v=1" alt="">
   </picture>
 </div>
 
-<!-- label bar -->
-<div class="header">
-  <div class="spark" aria-hidden="true"></div>
-  <div>Walmart — AI Grocery Assistant</div>
-</div>
+<div class="header"><div class="spark"></div>Walmart — AI Grocery Assistant</div>
 
-<!-- VoxTalk iframe shown on page (no click needed) -->
-<div class="panel" role="dialog" aria-label="VoxTalk Assistant">
-  <div class="panel-head"><div class="spark"></div><div>Talk to Walmart AI</div></div>
+<button class="launch" id="launch" title="Open Walmart AI Assistant"><div class="dot"></div></button>
+
+<section class="panel" id="panel" role="dialog" aria-label="VoxTalk Assistant">
+  <div class="panel-head">
+    <div class="panel-title"><div class="spark"></div><div>Walmart — AI Grocery Assistant</div></div>
+    <button class="close" id="closeBtn" aria-label="Close">×</button>
+  </div>
   <div class="panel-body">
     <iframe id="voxFrame"
       src="https://walmart-business-example.onrender.com/?src=wm-inline"
       allow="microphone; autoplay; clipboard-read; clipboard-write"
       referrerpolicy="no-referrer"
       title="VoxTalk Walmart Assistant"></iframe>
-
-    <!-- If embed blocked by headers, show a link after a delay -->
     <div class="fallback" id="fallback">
       <div>
         <h3>Open Walmart AI in a new tab</h3>
@@ -99,16 +99,25 @@ iframe{position:absolute; inset:0; width:100%; height:100%; border:0; background
       </div>
     </div>
   </div>
-</div>
+</section>
 
 <script>
-const frame = document.getElementById('voxFrame');
-const fallback = document.getElementById('fallback');
+const launch=document.getElementById('launch');
+const panel=document.getElementById('panel');
+const closeBtn=document.getElementById('closeBtn');
+const frame=document.getElementById('voxFrame');
+const fallback=document.getElementById('fallback');
 
-// If the iframe never loads (blocked by X-Frame-Options/CSP), show fallback after 3s
+launch.addEventListener('click',()=>{
+  launch.classList.add('spin');
+  panel.classList.remove('hidden');
+  setTimeout(()=>launch.classList.remove('spin'),600);
+});
+closeBtn.addEventListener('click',()=>panel.classList.add('hidden'));
+
 fallback.style.display='none';
-const check = setTimeout(()=>{ fallback.style.display='flex'; }, 3000);
-frame.addEventListener('load', ()=>{ clearTimeout(check); }, { once:true });
+const check=setTimeout(()=>{fallback.style.display='flex'},3500);
+frame.addEventListener('load',()=>{clearTimeout(check)},{once:true});
 </script>
 
 </body>
