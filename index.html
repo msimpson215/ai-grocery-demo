@@ -2,122 +2,170 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Walmart — AI Grocery Assistant (Inline VoxTalk)</title>
+<title>Walmart — AI Grocery Assistant (Demo)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light" />
 <style>
+/* ====== knobs you can tweak fast ====== */
 :root{
   --wm-blue:#0071ce;
   --spark:#ffd100;
-  --panel-w:420px;
-  --panel-h:70vh;
+  /* fine-tune this so the label sits above the search box on your mock */
+  --label-top-desktop:126px;
+  --label-top-tablet:120px;
+  --label-top-phone:112px;
+  --modal-w: min(440px, 92vw);
+  --modal-h: min(60vh, 520px);
 }
 
-/* reset */
+/* reset/base */
 *,*::before,*::after{box-sizing:border-box}
 html,body{margin:0;height:100%}
-body{min-height:100svh;overflow:hidden;font:16px system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#e9ecef}
+body{min-height:100svh;overflow:hidden;font:16px system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#e9ecef;color:#111}
 
-/* background Walmart mock */
-.bg{position:fixed;inset:0;z-index:1;overflow:hidden;background:#e9ecef}
+/* background Walmart mock (desktop+mobile) */
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;background:#e9ecef}
 .bg>picture,.bg>img{display:block;width:100vw;height:100svh}
 #mock{width:100%;height:100%;object-fit:cover;object-position:center top}
 
-/* header label */
-.header{
-  position:fixed;left:0;right:0;top:0;z-index:5;height:60px;
-  background:var(--wm-blue);color:#fff;
-  display:flex;align-items:center;gap:10px;padding:0 16px;
-  font-weight:900;letter-spacing:.25px;box-shadow:0 6px 20px rgba(0,0,0,.18)
+/* label centered over the search bar area (purely visual) */
+.ai-label{
+  position:fixed; left:50%; top:var(--label-top-desktop); transform:translateX(-50%);
+  z-index:10002; pointer-events:none;
+  display:inline-flex; gap:10px; align-items:center;
+  font-weight:900; letter-spacing:.25px; color:#fff;
+  text-shadow:0 1px 2px rgba(0,0,0,.25);
+  font-size:clamp(20px,4.8vw,26px);
 }
-.header .spark{width:18px;height:18px;border-radius:50%;background:var(--spark);box-shadow:0 0 0 2px rgba(255,255,255,.65) inset}
+.ai-label svg{width:22px;height:22px}
 
-/* button */
-.launch{
-  position:fixed;top:14px;left:14px;z-index:9999;width:50px;height:50px;
-  border-radius:50%;border:3px solid #fff;background:var(--wm-blue);
-  box-shadow:0 8px 20px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;
-  cursor:pointer;transition:transform .15s ease
+/* round launcher button (top-left) */
+#voxLaunch{
+  position:fixed; top:24px; left:24px; z-index:10003;
+  width:62px; height:62px; border-radius:50%;
+  border:3px solid #fff; background:var(--wm-blue); color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 10px 24px rgba(0,0,0,.28); cursor:pointer;
+  transition:transform .12s ease;
 }
-.launch:hover{transform:scale(1.06)}
-.launch .dot{width:16px;height:16px;border-radius:50%;background:var(--spark);box-shadow:0 0 0 2px rgba(255,255,255,.7) inset}
-.launch.spin{animation:spin 1s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
+#voxLaunch:hover{transform:scale(1.05)}
+#voxLaunch .dot{
+  width:20px; height:20px; border-radius:50%;
+  background:var(--spark); box-shadow:0 0 0 2px rgba(255,255,255,.75) inset;
+}
 
-/* chat panel */
-.panel{
-  position:fixed;right:16px;bottom:16px;z-index:9998;
-  width:min(var(--panel-w),95vw);height:min(var(--panel-h),85vh);
-  background:#fff;border-radius:14px;overflow:hidden;
-  box-shadow:0 20px 50px rgba(0,0,0,.4);
-  display:flex;flex-direction:column
+/* modal overlay with iframe */
+#voxModal{
+  position:fixed; inset:0; z-index:10004; display:none;
+  background:rgba(0,0,0,.28); backdrop-filter:blur(4px);
 }
-.panel.hidden{display:none}
-.panel-head{
-  display:flex;align-items:center;justify-content:space-between;
-  background:var(--wm-blue);color:#fff;font-weight:900;padding:8px 12px
+.vox-card{
+  position:absolute; left:50%; top:20%; transform:translate(-50%,0);
+  width:var(--modal-w); height:var(--modal-h);
+  background:#fff; border-radius:18px; overflow:hidden;
+  box-shadow:0 16px 48px rgba(0,0,0,.4); display:flex; flex-direction:column;
 }
-.panel-title{display:flex;align-items:center;gap:8px}
-.panel-title .spark{width:12px;height:12px;border-radius:50%;background:var(--spark)}
-.close{background:transparent;color:#fff;border:0;font-size:22px;cursor:pointer;padding:4px 10px}
-.panel-body{flex:1;position:relative;background:#fff}
-iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff}
+.vox-head{
+  display:flex; align-items:center; justify-content:space-between;
+  background:var(--wm-blue); color:#fff; font-weight:900;
+  padding:10px 12px;
+}
+.vox-body{flex:1; position:relative; background:#fff}
+.vox-body iframe{position:absolute; inset:0; width:100%; height:100%; border:0; background:#fff}
 
-/* fallback */
-.fallback{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:20px}
-.fallback a{display:inline-block;margin-top:10px;padding:10px 14px;background:var(--wm-blue);color:#fff;border-radius:10px;text-decoration:none;font-weight:900}
+/* fallback if embed blocked */
+.fallback{position:absolute; inset:0; display:none; align-items:center; justify-content:center; text-align:center; padding:20px}
+.fallback a{display:inline-block; margin-top:12px; padding:10px 14px; background:var(--wm-blue); color:#fff; border-radius:10px; text-decoration:none; font-weight:900}
+
+/* responsive tuning */
+@media (max-width:900px){ .ai-label{ top:var(--label-top-tablet) } }
+@media (max-width:520px){
+  .ai-label{ top:var(--label-top-phone) }
+  .vox-card{ top:8%; }
+}
+@media (prefers-reduced-motion: reduce){ *{animation:none!important;transition:none!important} }
 </style>
 </head>
 <body>
 
+<!-- Walmart mock background -->
 <div class="bg">
   <picture>
-    <source srcset="./walmart_mock_mobile.png?v=1" media="(max-width:768px)">
-    <img id="mock" src="./walmart_mock_.png?v=1" alt="">
+    <source srcset="walmart_mock_mobile.png?v=2" media="(max-width:768px)">
+    <img id="mock" src="walmart_mock_.png?v=26" alt="Walmart groceries mock">
   </picture>
 </div>
 
-<div class="header"><div class="spark"></div>Walmart — AI Grocery Assistant</div>
+<!-- Centered label over the mock -->
+<div class="ai-label" aria-hidden="true">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="8" r="4"></circle>
+    <path d="M4 20c0-4 4-6 8-6s8 2 8 6" fill="none" stroke="currentColor" stroke-width="2"/>
+  </svg>
+  <span>AI Grocery Assistant</span>
+</div>
 
-<button class="launch" id="launch" title="Open Walmart AI Assistant"><div class="dot"></div></button>
+<!-- Launcher button -->
+<button id="voxLaunch" aria-label="Open AI Assistant">
+  <span class="dot" aria-hidden="true"></span>
+</button>
 
-<section class="panel" id="panel" role="dialog" aria-label="VoxTalk Assistant">
-  <div class="panel-head">
-    <div class="panel-title"><div class="spark"></div><div>Walmart — AI Grocery Assistant</div></div>
-    <button class="close" id="closeBtn" aria-label="Close">×</button>
-  </div>
-  <div class="panel-body">
-    <iframe id="voxFrame"
-      src="https://walmart-business-example.onrender.com/?src=wm-inline"
-      allow="microphone; autoplay; clipboard-read; clipboard-write"
-      referrerpolicy="no-referrer"
-      title="VoxTalk Walmart Assistant"></iframe>
-    <div class="fallback" id="fallback">
-      <div>
-        <h3>Open Walmart AI in a new tab</h3>
-        <p>If the assistant doesn’t appear here, your browser blocked embedding.</p>
-        <a href="https://walmart-business-example.onrender.com/?src=wm-newtab" target="_blank" rel="noopener">Open Walmart AI</a>
+<!-- Modal with VoxTalk iframe -->
+<div id="voxModal" aria-hidden="true">
+  <div class="vox-card" role="dialog" aria-modal="true" aria-label="VoxTalk Assistant">
+    <div class="vox-head">
+      <div>Walmart — AI Grocery Assistant</div>
+      <button id="voxClose" aria-label="Close" style="all:unset;cursor:pointer;font-size:22px;line-height:1;padding:4px 8px">×</button>
+    </div>
+    <div class="vox-body">
+      <iframe id="voxFrame"
+        src="https://walmart-business-example.onrender.com/?src=wm-embed"
+        allow="microphone; autoplay; clipboard-read; clipboard-write"
+        referrerpolicy="no-referrer"
+        title="VoxTalk Walmart Assistant"></iframe>
+
+      <div class="fallback" id="fallback">
+        <div>
+          <h3>Open Walmart AI in a new tab</h3>
+          <p>If the assistant doesn’t appear here, your browser blocked embedding.</p>
+          <a href="https://walmart-business-example.onrender.com/?src=wm-newtab" target="_blank" rel="noopener">Open Walmart AI</a>
+        </div>
       </div>
     </div>
   </div>
-</section>
+</div>
 
 <script>
-const launch=document.getElementById('launch');
-const panel=document.getElementById('panel');
-const closeBtn=document.getElementById('closeBtn');
-const frame=document.getElementById('voxFrame');
-const fallback=document.getElementById('fallback');
+const btn = document.getElementById('voxLaunch');
+const modal = document.getElementById('voxModal');
+const closeBtn = document.getElementById('voxClose');
+const frame = document.getElementById('voxFrame');
+const fallback = document.getElementById('fallback');
 
-launch.addEventListener('click',()=>{
-  launch.classList.add('spin');
-  panel.classList.remove('hidden');
-  setTimeout(()=>launch.classList.remove('spin'),600);
+btn.addEventListener('click', () => {
+  modal.style.display = 'block';
+  modal.setAttribute('aria-hidden','false');
+  // show fallback if the iframe never loads (blocked by XFO/CSP)
+  fallback.style.display='none';
+  const check = setTimeout(()=>{ fallback.style.display='flex'; }, 3000);
+  frame.addEventListener('load', ()=>{ clearTimeout(check); }, { once:true });
 });
-closeBtn.addEventListener('click',()=>panel.classList.add('hidden'));
-
-fallback.style.display='none';
-const check=setTimeout(()=>{fallback.style.display='flex'},3500);
-frame.addEventListener('load',()=>{clearTimeout(check)},{once:true});
+closeBtn.addEventListener('click', () => {
+  modal.style.display = 'none';
+  modal.setAttribute('aria-hidden','true');
+});
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) { // click outside card to close
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden','true');
+  }
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden','true');
+  }
+});
 </script>
 
 </body>
